@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <base href="/">
+    <title>Title</title>
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+
+</head>
+<body ng-app="TenFingers" ng-controller="ExController" ng-keydown="onKeyDown($event)">
+<div class="left_menu">
+<div class="list-group">
+    <a ui-sref="exercise({number: 1})" class="list-group-item" ng-class="{active: active('/exercise/1')}">Harjutus 1</a>
+    <a ui-sref="exercise({number: 2})" class="list-group-item" ng-class="{active: active('/exercise/2')}">Harjutus 2</a>
+    <a ui-sref="exercise({number: 3})" class="list-group-item" ng-class="{active: active('/exercise/3')}">Harjutus 3</a>
+    <a ui-sref="exercise({number: 4})" class="list-group-item" ng-class="{active: active('/exercise/4')}">Harjutus 4</a>
+    <a ui-sref="exercise({number: 5})" class="list-group-item" ng-class="{active: active('/exercise/5')}">Harjutus 5</a>
+</div>
+</div>
+<div class="content">
+    <ui-view></ui-view>
+    </div>
+
+    <script src="/assets/js/angular.min.js"></script>
+    <script src="/assets/js/angular-ui-router.min.js"></script>
+    <script src="/assets/js/ui-bootstrap.min.js"></script>
+    <script src="/assets/js/jquery-3.1.1.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script src="/app.js"></script>
+    <script src="/app/controller/maincontroller.js"></script>
+</body>
+</html>

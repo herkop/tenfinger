@@ -1,0 +1,10 @@
+<div ng-controller="ExController">
+<h2>keys:</h2>
+<div>{{ keys }}</div>
+<div>
+    <span ng-repeat="lett in result track by $index" class="letter" ng-class="{letter_active: letter_active == lett+$index, letter_green: letter_style[$index], letter_red: (!letter_style[$index] && letter_style[$index] != undefined)}">{{ lett }}</span>
+</div>
+<div>{{ res }}</div>
+<div ng-include="'views/keyboard.html'"></div>
+<!--<canvas id="myCanvas" hieght="400" width="400"></canvas>-->
+</div>

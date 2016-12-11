@@ -1,0 +1,175 @@
+.max-height{
+    min-height: 100%;
+    height: 100%;
+}
+
+.left_menu{
+    float:left;
+    width: 17%;
+    height: 100%;
+    margin-top: 3%;
+}
+
+.content{
+    float:left;
+}
+
+.letter{
+    font-size: large;
+    padding: 5px;
+    font-weight: bold;
+}
+
+.letter_red{
+    color: red;
+}
+
+.letter_green {
+    color: green;
+}
+
+.letter_active{
+    border: solid black 1px;
+    border-radius: 5px;
+}
+
+.keyboard{
+    width: 900px;
+    height: 300px;
+
+}
+
+.first_line{
+    width: 100%;
+    height: 17%;
+}
+.sec_line{
+    width: 100%;
+    height: 17%;
+}
+
+.key_letter{
+    margin-top: 10%;
+    margin-left: 10%;
+}
+
+.key_norm{
+    border: black solid 1px;
+    border-radius: 6px;
+    float: left;
+    margin: 0.4%;
+    width: 5.6%;
+    height: 100%;
+}
+
+.key_backspace{
+    border: black solid 1px;
+    border-radius: 6px;
+    float: left;
+    margin: 0.4%;
+    width: 12.2%;
+    height: 100%;
+}
+
+.key_tab{
+    border: black solid 1px;
+    border-radius: 6px;
+    float: left;
+    margin: 0.4%;
+    width: 8.6%;
+    height: 100%;
+}
+
+.key_enter{
+    float: left;
+    width: 9.2%;
+    height: 35.6%;
+    margin-top: -4.6%;
+    margin-bottom: -5.6%;
+    margin-left: 0.4%;
+}
+
+.key_enter1{
+    border: black solid 1px;
+    border-radius: 6px;
+    border-bottom-right-radius: 0px;
+    float: left;
+    margin: 0.4%;
+    margin-top: 2%;
+    width: 100%;
+    height: 47.5%;
+}
+
+.key_enter2{
+    border: black solid 1px;
+    border-top: 0px;
+    /* border-radius: 0px; */
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    float: left;
+    margin: 0.4%;
+    margin-left: 20.5%;
+    margin-top: -1.5%;
+    width: 80%;
+    height: 56%;
+    background-color: #fff;
+}
+
+.key_enter3{
+    width: 17%;
+    height: 17%;
+    margin-left: -17%;
+    background-color: #fff;
+    margin-top: 0%;
+}
+
+.key_enter4{
+    border-top: black solid 1px;
+    border-right: black solid 1px;
+    border-top-right-radius: 6px;
+    width: 100%;
+    height: 100%;
+}
+
+.key_enter_place{
+    border-radius: 6px;
+    float: left;
+    margin: 0.4%;
+    width: 5.6%;
+    height: 100%;
+}
+
+.key_caps{
+    border: black solid 1px;
+    border-radius: 6px;
+    float: left;
+    margin: 0.4%;
+    width: 10.2%;
+    height: 100%;
+}
+
+.key_shift{
+    border: black solid 1px;
+    border-radius: 6px;
+    float: left;
+    margin: 0.4%;
+    width: 18.6%;
+    height: 100%;
+}
+
+.key_space{
+    border: black solid 1px;
+    border-radius: 6px;
+    float: left;
+    margin: 0.4%;
+    width: 31.2%;
+    height: 100%;
+}
+
+.key_active{
+    background-color: #01ff70;
+}
+
+.key_wrong{
+    background-color: #d43f3a;
+}
