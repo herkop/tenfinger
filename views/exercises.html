@@ -8,8 +8,8 @@
     <link rel="stylesheet" href="/assets/css/main.css">
 
 </head>
-<body ng-app="TenFingers" ng-controller="ExController" ng-keydown="onKeyDown($event)">
-<div class="left_menu">
+<body ng-app="TenFingers" ng-controller="ExerciseController" ng-keydown="onKeyDown($event)">
+<div class="left_menu" ng-controller="MenuController">
 <div class="list-group">
     <a ui-sref="exercise({number: 1})" class="list-group-item" ng-class="{active: active('/exercise/1')}">Harjutus 1</a>
     <a ui-sref="exercise({number: 2})" class="list-group-item" ng-class="{active: active('/exercise/2')}">Harjutus 2</a>
@@ -18,7 +18,7 @@
     <a ui-sref="exercise({number: 5})" class="list-group-item" ng-class="{active: active('/exercise/5')}">Harjutus 5</a>
 </div>
 </div>
-<div class="content">
+<div class="content" ng-controller="ExController">
     <ui-view></ui-view>
     </div>
 
