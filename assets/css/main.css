@@ -12,6 +12,13 @@
 
 .content{
     float:left;
+    margin-left: 1%;
+}
+
+.stat_info{
+    border: solid black 1px;
+    margin-bottom: 1%;
+    width: 96%;
 }
 
 .letter{

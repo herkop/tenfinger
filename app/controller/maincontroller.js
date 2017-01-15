@@ -15,6 +15,8 @@ app.controller('ExerciseController', function($scope, keyboard) {
         $scope.keyboard.key_active = keyboard.getActiveKey();
         $scope.letter_style = keyboard.getLetterStyle();
         $scope.key_wrong = keyboard.getWrongKey();
+        $scope.keyboard.correct = keyboard.getCorrect();
+        $scope.keyboard.wrong = keyboard.getWrong();
 
     };
 });
@@ -25,9 +27,25 @@ app.controller('MenuController', function($scope, $location){
     };
 });
 
-app.controller('ExController', function($scope, $stateParams, keyboard) {
+app.controller('ExController', function($scope, $stateParams, keyboard, $timeout) {
     $scope.keyboard = keyboard;
     var exes = ["jfjffjjfjjjfffjfjfjjfjff", "dkddkkkddkdkdkdkkkdddkd", "slllssllsllsssllsllslslsl", "aöaöaöaöaöööaaöaöaööaöö", "sösdjklalkdfjjllskkdjjfalsddkjfds"];
+
+    var timeSpent = function () {
+      if(keyboard.getStartTime() != 0){
+          if(keyboard.getFinishTime() > 0){
+              $scope.keyboard.time = keyboard.getDiv();
+          }
+          else{
+              var time = (new Date()).getTime();
+              var div = (time - keyboard.getStartTime()) / 1000;
+              $scope.keyboard.time = div;
+          }
+      }
+      if(keyboard.getDiv() == 0) {
+          $timeout(timeSpent, 100);
+      }
+    };
 
     if(!angular.isUndefined($stateParams.number)) {
         $scope.number = $stateParams.number;
@@ -37,59 +55,11 @@ app.controller('ExController', function($scope, $stateParams, keyboard) {
         $scope.keyboard.letter_active = keyboard.getActiveLetter();
         $scope.keyboard.key_active = keyboard.getActiveKey();
         $scope.letter_style = keyboard.getLetterStyle();
+        $scope.keyboard.correct = keyboard.getCorrect();
+        $scope.keyboard.wrong = keyboard.getWrong();
+        $scope.keyboard.time = 0;
+        $timeout(timeSpent, 100);
 
     }
-
-});
-
-app.service('keyboard', function(){
-    var step = 0;
-    var word = null;
-    var active_letter = null;
-    var active_key = null;
-    var letter_style = [];
-    var wrong_key = null;
-    this.getWord = function(){
-        return word;
-    };
-    this.setWord = function(value){
-        word = value;
-        step = 0;
-        active_key = word[step];
-        active_letter = word[step]+step;
-        letter_style = [];
-        wrong_key = null;
-    };
-    this.getActiveLetter = function(){
-        return active_letter;
-    };
-    this.getActiveKey = function(){
-        return active_key;
-    };
-    this.getLetterStyle = function(){
-        return letter_style;
-    };
-    this.getWrongKey = function(){
-        return wrong_key;
-    };
-
-    this.letterTyped = function(letter){
-        if(letter == word[step]){
-            //correct - next letter
-            if(wrong_key == null) {
-                letter_style[step] = true;
-            }
-
-            step += 1;
-            wrong_key = null;
-            active_key = word[step];
-            active_letter = word[step]+step;
-        }
-        else{
-            //wrong - red color
-            letter_style[step] = false;
-            wrong_key = letter;
-        }
-    };
 
 });
