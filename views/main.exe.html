@@ -1,1 +1,14 @@
-<p>Vali vasakult harjutus, et õppima hakata!</p>
+<div ng-controller="ExeMainController">
+    <p>Vali vasakult harjutus, et õppima hakata!</p>
+    <div ng-show="!isUser">
+        <form class="form-inline">
+            <label class="sr-only" for="inlineFormInput">Nimi</label>
+            <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="inlineFormInput" placeholder="Nimi" name="name" ng-model="name">
+
+            <button type="submit" class="btn btn-primary" ng-click="clickStart()">Alusta</button>
+        </form>
+    </div>
+    <div ng-show="isUser">
+        <span> Tere, {{ user }}!</span>
+    </div>
+</div>

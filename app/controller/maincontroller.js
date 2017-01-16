@@ -4,7 +4,7 @@ app.controller('MainController', function($scope) {
 
 });
 
-app.controller('ExerciseController', function($scope, keyboard) {
+app.controller('ExerciseController', function($scope, keyboard, $cookies) {
 
     $scope.keyboard = keyboard;
     $scope.onKeyDown = function ($event) {
@@ -28,6 +28,7 @@ app.controller('MenuController', function($scope, $location){
 });
 
 app.controller('ExController', function($scope, $stateParams, keyboard, $timeout) {
+    //$cookies.put('user', 'Tester');
     $scope.keyboard = keyboard;
     var exes = ["jfjffjjfjjjfffjfjfjjfjff", "dkddkkkddkdkdkdkkkdddkd", "slllssllsllsssllsllslslsl", "aöaöaöaöaöööaaöaöaööaöö", "sösdjklalkdfjjllskkdjjfalsddkjfds"];
 
@@ -62,4 +63,27 @@ app.controller('ExController', function($scope, $stateParams, keyboard, $timeout
 
     }
 
+});
+
+app.controller('ExeMainController', function($scope, $cookies){
+    $scope.name = "";
+    var user = $cookies.get("user");
+    $scope.isUser = false;
+    if(angular.isUndefined(user)){
+        $scope.isUser = false;
+    }
+    else{
+        $scope.isUser = true;
+        $scope.user=user;
+    }
+    $scope.clickStart = function(){
+        var name = $scope.name;
+        if(name.length > 2) {
+            var date = new Date();
+            date.setDate(date.getDate() + 365 * 10);
+            $cookies.put('user', name, {expires: date});
+            $scope.isUser = true;
+            $scope.user = $cookies.get("user");
+        }
+    }
 });
