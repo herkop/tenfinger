@@ -4,8 +4,21 @@ app.controller('MainController', function($scope) {
 
 });
 
-app.controller('ExerciseController', function($scope, keyboard, $cookies) {
+app.controller('ExerciseController', function($scope, keyboard, $cookies, user) {
+    $scope.switchKeyboard ={
+        value: true
+    };
+    $scope.switchKeyboardInst ={
+        value: true,
+        disable: false
+    };
+    $scope.switchKeyboardLay ={
+        value: true,
+        disable: false
+    };
 
+
+    $scope.username = user.getUser();
     $scope.keyboard = keyboard;
     $scope.onKeyDown = function ($event) {
         $scope.result = keyboard.getWord();
@@ -19,6 +32,19 @@ app.controller('ExerciseController', function($scope, keyboard, $cookies) {
         $scope.keyboard.wrong = keyboard.getWrong();
 
     };
+    $scope.$watchCollection('switchKeyboard.value', function () {
+        if($scope.switchKeyboard.value){
+            $scope.switchKeyboardInst.disable = false;
+            $scope.switchKeyboardLay.disable = false;
+        }
+        else {
+            $scope.switchKeyboardInst.disable = true;
+            $scope.switchKeyboardLay.disable = true;
+        }
+    });
+    $scope.saveSettings = function () {
+        //console.log($scope.switchKeyboard.value);
+    }
 });
 
 app.controller('MenuController', function($scope, $location){

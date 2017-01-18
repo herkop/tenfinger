@@ -1,4 +1,4 @@
-var app = angular.module('TenFingers', ['ui.router', 'ui.bootstrap', 'ngCookies']);
+var app = angular.module('TenFingers', ['ui.router', 'ui.bootstrap', 'ngCookies', 'toggle-switch']);
 
 app.config(function($stateProvider, $locationProvider, $qProvider) {
 

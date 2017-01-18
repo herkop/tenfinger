@@ -15,6 +15,15 @@
     margin-left: 1%;
 }
 
+.navbar-setting{
+    margin-top: 7px;
+    float: right;
+}
+
+.switch-loc-right{
+    float: right;
+}
+
 .stat_info{
     border: solid black 1px;
     margin-bottom: 1%;
