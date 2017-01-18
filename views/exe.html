@@ -5,6 +5,6 @@
     <span ng-repeat="lett in result track by $index" class="letter" ng-class="{letter_active: keyboard.letter_active == lett+$index, letter_green: letter_style[$index], letter_red: (!letter_style[$index] && letter_style[$index] != undefined)}">{{ lett }}</span>
 </div>
 <div></div>
-<div ng-include="'views/keyboard.html'"></div>
+<div ng-show="switchKeyboard.value" ng-include="'views/keyboard.html'"></div>
 <!--<canvas id="myCanvas" hieght="400" width="400"></canvas>-->
 </div>
