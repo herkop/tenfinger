@@ -1,5 +1,6 @@
 var express = require('express');
 var app = express();
+var db = require('./db');
 
 app.use(express.static(__dirname));
 /* GET home page. */
