@@ -14,6 +14,7 @@ app.get('/exercise/*', function(req, res) {
   res.sendFile('/views/exercises.html', { root: __dirname});
 });
 
+app.get('/test', db.getTest);
 
 
 app.listen(process.env.PORT || 3100, function(){
