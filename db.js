@@ -19,6 +19,6 @@ db.connect();
 exports.getTest = function (req, res) {
     var query = db.query("SELECT * FROM test").then(function (data) {
         console.log(data["rows"]);
-        res.json(data);
+        res.json(data["rows"]);
     })
 };
