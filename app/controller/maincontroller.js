@@ -27,16 +27,23 @@ app.controller('ExerciseController', function($scope, $http, keyboard, $cookies,
 
     $scope.user = user;
     $scope.user.name = "";
-    user.getUser().then(function (data) {
-        if(data.length == 0) {
-            $scope.user.name = "külaline";
-            $scope.user.isUser = false;
-        }
-        else {
-            $scope.user.name = data[0].name;
-            $scope.user.isUser = true;
-        }
-    });
+    if(user.getUser() == null){
+        $scope.user.name = "külaline";
+        $scope.user.isUser = false;
+    }
+    else {
+        user.getUser().then(function (data) {
+            if (data.length == 0) {
+                $scope.user.name = "külaline";
+                $scope.user.isUser = false;
+            }
+            else {
+                console.log(data);
+                $scope.user.name = data[0].name;
+                $scope.user.isUser = true;
+            }
+        });
+    }
     $scope.keyboard = keyboard;
     $scope.onKeyDown = function ($event) {
         $scope.result = keyboard.getWord();
@@ -144,16 +151,23 @@ app.controller('ExeMainController', function($scope, $cookies, $http, user){
     //$scope.user = user.getUser();
     $scope.user = user;
     $scope.user.name = "";
-    user.getUser().then(function (data) {
-        if(data.length == 0) {
-            $scope.user.name = "külaline";
-            $scope.user.isUser = false;
-        }
-        else {
-            $scope.user.name = data[0].name;
-            $scope.user.isUser = true;
-        }
-    });
+    if(user.getUser() == null){
+        $scope.user.name = "külaline";
+        $scope.user.isUser = false;
+    }
+    else {
+        user.getUser().then(function (data) {
+            if (data.length == 0) {
+                $scope.user.name = "külaline";
+                $scope.user.isUser = false;
+            }
+            else {
+                console.log(data);
+                $scope.user.name = data[0].name;
+                $scope.user.isUser = true;
+            }
+        });
+    }
     $scope.clickStart = function() {
         $http.get('/person/add/'+$scope.name).then(function (response) {
             user.setUser(response.data[0].id, response.data[0].name);

@@ -5,10 +5,14 @@ app.service('user', function ($cookies, $http) {
    var isUser = false;
    this.reNewUser = function () {
        id = $cookies.get("user");
-       return $http.get('/person/id/'+id).then(function (res) {
+       if(angular.isUndefined(id)){
+           return null;
+       }else {
+           return $http.get('/person/id/' + id).then(function (res) {
 
-           return res.data;
-       });
+               return res.data;
+           });
+       }
    };
 
    this.setUser = function (id, name) {
