@@ -10,12 +10,12 @@
 .ats-switch.disabled {
     opacity: 0.5;
     filter: alpha(opacity=50);
-    cursor: default !important;
+    cursor: not-allowed !important;/**default -> not allowed*/
 }
 .ats-switch.disabled .switch-left,
 .ats-switch.disabled .switch-right,
 .ats-switch.disabled .knob {
-    cursor: default !important;
+    cursor: not-allowed !important;/**default -> not allowed*/
 }
 .ats-switch span {
     cursor: pointer;

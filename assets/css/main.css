@@ -20,8 +20,13 @@
     float: right;
 }
 
-.switch-loc-right{
+.loc-right{
     float: right;
+}
+
+#keyboardLayout {
+    width: 100px;
+    cursor: pointer;
 }
 
 .stat_info{

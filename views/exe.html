@@ -1,8 +1,8 @@
 <div >
-<h2>Harjutus {{ number }}:</h2>
+<h2>{{ exerName }}:</h2>
 <div class="stat_info">Õigeid: {{ keyboard.correct }}  Valesid: {{ keyboard.wrong }}  Aeg: {{ keyboard.time }}</div>
 <div>
-    <span ng-repeat="lett in result track by $index" class="letter" ng-class="{letter_active: keyboard.letter_active == lett+$index, letter_green: letter_style[$index], letter_red: (!letter_style[$index] && letter_style[$index] != undefined)}">{{ lett }}</span>
+    <span ng-repeat="lett in result track by $index" class="letter" ng-class="{letter_active: keyboard.letter_active == lett+$index, letter_green: keyboard.letter_style[$index], letter_red: (!keyboard.letter_style[$index] && keyboard.letter_style[$index] != undefined)}">{{ lett }}</span>
 </div>
 <div></div>
 <div ng-show="switchKeyboard.value" ng-include="'views/keyboard.html'"></div>

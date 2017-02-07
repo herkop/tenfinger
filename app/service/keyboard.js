@@ -12,6 +12,10 @@ app.service('keyboard', function(){
     var start_time = 0;
     var finish_time = 0;
     var div = 0;
+    var keyHint = true;
+    var wrong_type = null;
+    var letterHint = true;
+    var letter_style_saved = [];
     this.getWord = function(){
         return word;
     };
@@ -28,6 +32,8 @@ app.service('keyboard', function(){
         start_time = 0;
         finish_time = 0;
         div = 0;
+        wrong_type = null;
+        letter_style_saved = [];
     };
     this.getActiveLetter = function(){
         return active_letter;
@@ -65,8 +71,11 @@ app.service('keyboard', function(){
     this.letterTyped = function(letter){
         if(letter == word[step]){
             //correct - next letter
-            if(wrong_key == null) {
-                letter_style[step] = true;
+            if(wrong_type == null) {
+                if(letterHint) {
+                    letter_style[step] = true;
+                    letter_style_saved[step] = true;
+                }
                 correct += 1;
             }
             if(step == 0){
@@ -79,19 +88,51 @@ app.service('keyboard', function(){
 
             step += 1;
             same_char = false;
-            wrong_key = null;
-            active_key = word[step];
+            if(keyHint){
+                wrong_key = null;
+                active_key = word[step];
+            }
+            wrong_type = null;
             active_letter = word[step]+step;
         }
         else{
             //wrong - red color
-            letter_style[step] = false;
-            wrong_key = letter;
+            if(letterHint) {
+                letter_style[step] = false;
+                letter_style_saved[step] = false;
+            }
+            if(keyHint) {
+                wrong_key = letter;
+            }
+            wrong_type = letter;
             if(!same_char && word.length > correct + wrong) {
                 wrong += 1;
                 same_char = true;
             }
         }
+    };
+
+    this.setKeyboardHint = function (value) {
+        keyHint = value;
+        if(value) {
+            if(word != null) {
+                active_key = word[step];
+                wrong_key = wrong_type;
+            }
+        }else{
+            active_key = null;
+            wrong_key = null;
+        }
+    };
+
+    this.setLetterHint = function (value){
+      letterHint = value;
+      if(value){
+          letter_style = letter_style_saved;
+      }
+      else{
+          letter_style = [];
+      }
     };
 
 });

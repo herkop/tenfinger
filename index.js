@@ -15,6 +15,10 @@ app.get('/exercise/*', function(req, res) {
 });
 
 app.get('/test', db.getTest);
+app.get('/person/id/:id', db.getPerson);
+app.get('/person/add/:name', db.setPerson);
+app.get('/exec', db.getExercise);
+app.get('/currentexec/id/:id', db.getCurrentExercise);
 
 
 app.listen(process.env.PORT || 3100, function(){

@@ -14,7 +14,7 @@
     <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand" href="#">10 sõrmega trükkimine</a>
-            <p class="navbar-text">Kasutad rakendust kui {{ username }}</p>
+            <p class="navbar-text">Kasutad rakendust kui {{ user.name }}</p>
         </div>
         <div class="navbar-setting">
             <button type="button" class="btn btn-default" data-toggle="modal" data-target=".bs-example-modal-sm">
@@ -30,17 +30,24 @@
                         <div class="modal-body">
                             <form>
                                 <div class="form-inline form-group">
-                                    <label for="tog1">Klaviatuuri kuvamine</label>
-                                    <toggle-switch class="switch-loc-right" ng-model="switchKeyboard.value" id="tog1"></toggle-switch>
+                                    <label for="letterStyle">Sisestatud teksti värv</label>
+                                    <toggle-switch class="loc-right" ng-model="switchLetterStyle.value" id="letterStyle"></toggle-switch>
                                 </div>
                                 <div class="form-inline form-group">
-                                    <label for="tog2">Klaviatuuri õpetused</label>
-                                    <toggle-switch class="switch-loc-right" ng-model="switchKeyboardInst.value" id="tog2" is-disabled="switchKeyboardInst.disable"></toggle-switch>
+                                    <label for="keyboardShow">Klaviatuuri kuvamine</label>
+                                    <toggle-switch class="loc-right" ng-model="switchKeyboard.value" id="keyboardShow"></toggle-switch>
                                 </div>
                                 <div class="form-inline form-group">
-                                    <label for="tog3">Klaviatuur</label>
-                                    <toggle-switch class="switch-loc-right" ng-model="switchKeyboardLay.value" id="tog3" is-disabled="switchKeyboardLay.disable"></toggle-switch>
+                                    <label for="keyboardLayout">Klaviatuur</label>
+                                    <select id="keyboardLayout" class="form-control loc-right" ng-model="selectKeyboardLayout.value" ng-disabled="selectKeyboardLayout.disable">
+                                        <option value="eesti">Eesti</option>
+                                    </select>
                                 </div>
+                                <div class="form-inline form-group">
+                                    <label for="keyboardInst">Klaviatuuri õpetused</label>
+                                    <toggle-switch class="loc-right " ng-model="switchKeyboardInst.value" id="keyboardInst" is-disabled="switchKeyboardInst.disable"></toggle-switch>
+                                </div>
+
                             </form>
                         </div>
                     </div>
@@ -51,11 +58,7 @@
 </nav>
 <div class="left_menu" ng-controller="MenuController">
 <div class="list-group">
-    <a ui-sref="exercise({number: 1})" class="list-group-item" ng-class="{active: active('/exercise/1')}">Harjutus 1</a>
-    <a ui-sref="exercise({number: 2})" class="list-group-item" ng-class="{active: active('/exercise/2')}">Harjutus 2</a>
-    <a ui-sref="exercise({number: 3})" class="list-group-item" ng-class="{active: active('/exercise/3')}">Harjutus 3</a>
-    <a ui-sref="exercise({number: 4})" class="list-group-item" ng-class="{active: active('/exercise/4')}">Harjutus 4</a>
-    <a ui-sref="exercise({number: 5})" class="list-group-item" ng-class="{active: active('/exercise/5')}">Harjutus 5</a>
+    <a ng-repeat="exer in exercise" ui-sref="exercise({number: {{exer.id}}})" class="list-group-item" ng-class="{active: active('/exercise/{{exer.id}}')}">{{ exer.name }}</a>
 </div>
 </div>
 <div class="content" ng-controller="ExController">
