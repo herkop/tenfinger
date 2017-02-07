@@ -38,7 +38,6 @@ app.controller('ExerciseController', function($scope, $http, keyboard, $cookies,
                 $scope.user.isUser = false;
             }
             else {
-                console.log(data);
                 $scope.user.name = data[0].name;
                 $scope.user.isUser = true;
             }
@@ -162,7 +161,6 @@ app.controller('ExeMainController', function($scope, $cookies, $http, user){
                 $scope.user.isUser = false;
             }
             else {
-                console.log(data);
                 $scope.user.name = data[0].name;
                 $scope.user.isUser = true;
             }
