@@ -22,7 +22,12 @@ app.service('keyboard', function(){
     this.setWord = function(value){
         word = value;
         step = 0;
-        active_key = word[step];
+        if(keyHint) {
+            active_key = word[step];
+        }
+        else{
+            active_key = null;
+        }
         active_letter = word[step]+step;
         letter_style = [];
         wrong_key = null;
