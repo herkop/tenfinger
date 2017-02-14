@@ -184,3 +184,93 @@ app.controller('ExeMainController', function($scope, $cookies, $http, user){
 
     }
 });
+
+app.controller('ExAudioController', function($scope, ngAudio){
+
+    $scope.vol = 0.5;
+    $scope.playb = 1.0;
+    $scope.textChecked = "";
+    $scope.textVisibility = true;
+    $scope.correctHide = true;
+    $scope.correctAnswer = "";
+    var started = false;
+    $scope.textDisabled = false;
+    $scope.textInserted = "";
+    var text = "Oletame, et oled korilane õunte sünnimaal Kasahstanis. Regulaarselt nälga tundes oled õnnelik märgates eemal õunapuude salu. Õnnetuseks märkad, et samas suunas vaatab teisigi tühjusest koriseva kõhuga indiviide. Selles oletuse mängus on sul kasutada omapärane laserrelv, millest tulistades saad muuta pihtasaaja ajutiselt liikumisvõimetuks. Paraku pead arvestama, et konkurentidel on kasutuses samasugune relv sinu tulistamiseks. Mis sa arvad, kas keskendud rohkem õunte kogumisele või püüad pigem teisi õuntest eemal hoida? Võime spekuleerida, kuidas valiks USA värske president, aga kui sa oled nutikas, nõuad otsustamiseks täiendavat informatsiooni. Tõenäoliselt tahad teada, kas õunu on palju või vähe. Kui õunu on vähe, tasub keskenduda konkurentide segamisele. Kui õunu on rohkem, võiksid olla inimlikum, süüa ise kõht täis ja jätta teised rahule.";
+    $scope.startExe = function () {
+        if(!started) {
+            $scope.audio = ngAudio.load('/media/speech/1702141236060_4785.mp3');
+            //$scope.audio.volume = $scope.vol;
+            //console.log($scope.audio.playbackRate);
+            started = true;
+            $scope.audio.play();
+
+            //$scope.audio.playbackRate = $scope.playb;
+            $scope.textDisabled = false;
+            $scope.textVisibility = true;
+            $scope.correctAnswer = "";
+        }
+    };
+    $scope.endExe = function () {
+        if(started){
+            started = false;
+            $scope.audio.restart();
+            $scope.textDisabled = true;
+            $scope.textVisibility = false;
+            $scope.correctAnswer = text;
+            textCheck($scope.textInserted);
+        }
+    };
+
+    $scope.toggleCorrect = function () {
+        $scope.correctHide = !$scope.correctHide;
+    };
+
+    var textCheck = function (value) {
+        var correct = text.split(" ");
+        var inserted = value.split(" ");
+        var allword = {};
+        var nr = 0;
+        //console.log(correct);
+        //console.log(inserted);
+        for(var i = 0; i < inserted.length; i++){
+            allword[nr] = wordCheck(correct[i], inserted[i]);
+            nr++;
+            allword[nr] = {0:{letter:" ", correct: true}};
+            nr++;
+        }
+        var re = wordCheck("aabits", "kabits");
+        //console.log(allword);
+        $scope.textChecked = allword;
+    };
+
+    var wordCheck = function (wordC, wordT) {
+        var res = {};
+        var len = 0;
+        if(wordC >= wordT){
+            len = wordC.length;
+        }
+        else{
+            len = wordT.length;
+        }
+        for(var i = 0; i < len; i++){
+            if(wordT.length < i){
+                break;
+            }
+            if(wordC.length < i){
+                res[i] = { letter: wordT[i], correct: false};
+            }
+            else {
+                if (wordC[i] == wordT[i]) {
+                    res[i] = {letter: wordT[i], correct: true};
+                }
+                else {
+                    res[i] = {letter: wordT[i], correct: false};
+                }
+            }
+        }
+
+        return res;
+    }
+
+});

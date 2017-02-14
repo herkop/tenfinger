@@ -1,4 +1,4 @@
-var app = angular.module('TenFingers', ['ui.router', 'ui.bootstrap', 'ngCookies', 'toggle-switch']);
+var app = angular.module('TenFingers', ['ui.router', 'ui.bootstrap', 'ngCookies', 'toggle-switch', 'ngAudio']);
 
 app.config(function($stateProvider, $locationProvider, $qProvider) {
 
@@ -10,9 +10,15 @@ app.config(function($stateProvider, $locationProvider, $qProvider) {
             resolve: {}
         })
         .state('exercise', {
-            url: '/exercise/:number',
+            url: '/exercise/begin/:number',
             templateUrl: '/views/exe.html',
             controller: 'ExController',
+            resolve: {}
+        })
+        .state('exerciseAudio', {
+            url: '/exercise/audio',
+            templateUrl: '/views/exe-audio.html',
+            controller: 'ExAudioController',
             resolve: {}
         });
 

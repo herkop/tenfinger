@@ -74,45 +74,47 @@ app.service('keyboard', function(){
     };
 
     this.letterTyped = function(letter){
-        if(letter == word[step]){
-            //correct - next letter
-            if(wrong_type == null) {
-                if(letterHint) {
-                    letter_style[step] = true;
-                    letter_style_saved[step] = true;
+        if(word != null) {
+            if (letter == word[step]) {
+                //correct - next letter
+                if (wrong_type == null) {
+                    if (letterHint) {
+                        letter_style[step] = true;
+                        letter_style_saved[step] = true;
+                    }
+                    correct += 1;
                 }
-                correct += 1;
-            }
-            if(step == 0){
-                start_time = (new Date()).getTime();
-            }
-            if(step == word.length-1){
-                finish_time = (new Date()).getTime();
-                div = (finish_time - start_time) / 1000;
-            }
+                if (step == 0) {
+                    start_time = (new Date()).getTime();
+                }
+                if (step == word.length - 1) {
+                    finish_time = (new Date()).getTime();
+                    div = (finish_time - start_time) / 1000;
+                }
 
-            step += 1;
-            same_char = false;
-            if(keyHint){
-                wrong_key = null;
-                active_key = word[step];
+                step += 1;
+                same_char = false;
+                if (keyHint) {
+                    wrong_key = null;
+                    active_key = word[step];
+                }
+                wrong_type = null;
+                active_letter = word[step] + step;
             }
-            wrong_type = null;
-            active_letter = word[step]+step;
-        }
-        else{
-            //wrong - red color
-            if(letterHint) {
-                letter_style[step] = false;
-                letter_style_saved[step] = false;
-            }
-            if(keyHint) {
-                wrong_key = letter;
-            }
-            wrong_type = letter;
-            if(!same_char && word.length > correct + wrong) {
-                wrong += 1;
-                same_char = true;
+            else {
+                //wrong - red color
+                if (letterHint) {
+                    letter_style[step] = false;
+                    letter_style_saved[step] = false;
+                }
+                if (keyHint) {
+                    wrong_key = letter;
+                }
+                wrong_type = letter;
+                if (!same_char && word.length > correct + wrong) {
+                    wrong += 1;
+                    same_char = true;
+                }
             }
         }
     };

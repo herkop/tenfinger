@@ -35,6 +35,14 @@
     width: 96%;
 }
 
+.exer-audio-info{
+    border: solid black 1px;
+}
+
+.answer-text{
+    width: 400px;
+}
+
 .letter{
     font-size: large;
     padding: 5px;
