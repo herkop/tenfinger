@@ -35,12 +35,53 @@
     width: 96%;
 }
 
-.exer-audio-info{
-    border: solid black 1px;
+.audio-test{
+    height: 80px;
+}
+
+.audio-test-button{
+    float: left;
+    margin-top: 26px;
+}
+
+.audio-line{
+    margin-top: -10px;
+}
+
+.audio-track{
+    float: left;
+    margin-top: 26px;
+    font-weight: bold;
+}
+
+.audio-slider{
+
+}
+
+.slider{
+    float: left;
+    margin: 10px;
+}
+
+.slider-header{
+    float: left;
+    margin-top: 26px;
+}
+
+.slider-body{
+    float: left;
+    width: 250px;
+}
+
+.slider-progress{
+    width: 800px;
+    float: left;
+    margin-left: 8px;
 }
 
 .answer-text{
-    width: 400px;
+    width: 900px;
+    margin-top: 10px;
 }
 
 .letter{

@@ -6,6 +6,7 @@
     <title>Title</title>
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/angular-toogle-switch.css">
+    <link rel="stylesheet" href="/assets/css/rzslider.min.css">
     <link rel="stylesheet" href="/assets/css/main.css">
 
 </head>
@@ -60,11 +61,11 @@
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel">
             <div class="" role="tab" id="headingOne">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne" class="list-group-item">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" class="list-group-item">
                     Alustajale
                 </a>
             </div>
-            <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+            <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" uib-collapse="menu.begin">
                 <div class="">
                     <div class="list-group">
                         <a ng-repeat="exer in exercise" ui-sref="exercise({number: {{exer.id}}})" class="list-group-item" ng-class="{active: active('/exercise/begin/{{exer.id}}')}">{{ exer.name }}</a>
@@ -75,11 +76,11 @@
             </div>
          <div class="panel">
             <div class="" role="tab" id="headingTwo">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseOne" class="list-group-item">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseOne" class="list-group-item">
                     Edasijõudnule
                 </a>
             </div>
-            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo" uib-collapse="menu.audio">
                 <div class="">
                     <div class="list-group">
                         <!--<a ng-repeat="exer in exercise" ui-sref="exercise({number: {{exer.id}}})" class="list-group-item" ng-class="{active: active('/exercise/{{exer.id}}')}">{{ exer.name }}</a>-->
@@ -102,6 +103,7 @@
     <script src="/assets/js/angular-toggle-switch.min.js"></script>
     <script src="/assets/js/angular-cookies.js"></script>
     <script src="/assets/js/angular.audio.js"></script>
+    <script src="/assets/js/rzslider.min.js"></script>
     <script src="/app.js"></script>
     <script src="/app/service/keyboard.js"></script>
     <script src="/app/service/user.js"></script>

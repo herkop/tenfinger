@@ -1,4 +1,4 @@
-var app = angular.module('TenFingers', ['ui.router', 'ui.bootstrap', 'ngCookies', 'toggle-switch', 'ngAudio']);
+var app = angular.module('TenFingers', ['ui.router', 'ui.bootstrap', 'ngCookies', 'toggle-switch', 'ngAudio', 'rzModule']);
 
 app.config(function($stateProvider, $locationProvider, $qProvider) {
 
