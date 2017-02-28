@@ -58,6 +58,10 @@
 
 }
 
+.alert-margin{
+    margin-top: 10px;
+}
+
 .slider{
     float: left;
     margin: 10px;

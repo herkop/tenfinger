@@ -198,7 +198,7 @@ app.controller('ExeMainController', function($scope, $cookies, $http, user){
     }
 });
 
-app.controller('ExAudioController', function($scope, ngAudio){
+app.controller('ExAudioController', function($scope, $http, ngAudio){
      $scope.sliderVolume = {
         value: 0.5,
         options: {
@@ -249,6 +249,9 @@ app.controller('ExAudioController', function($scope, ngAudio){
     $scope.textDisabled = false;
     $scope.textInserted = "";
     $scope.textareaFocus = false;
+    $scope.newAudioExeText = "";
+    $scope.errorAlert = false;
+    $scope.successAlert = false;
     $scope.audioExerResult = {
       typed: {
           all: 0,
@@ -279,28 +282,6 @@ app.controller('ExAudioController', function($scope, ngAudio){
     $scope.$watchCollection("audio.progress", function () {
        $scope.sliderProgress.value = $scope.audio.progress;
     });
-    /** HERE COMES ERROR -- probleem võib olla selles, audio faili laadmine võtab aega!!!*/
-    if(!angular.isUndefined($scope.audio.progress)) {
-        $scope.$watchCollection("audio.remaining", function () {
-            console.log($scope.audio.remaining);
-            /**var minutes = Math.floor($scope.audio.remaining/60);
-             var seconds = Math.floor($scope.audio.remaining - minutes*60);
-
-             if(minutes < 10){
-            $scope.remainingTime.minutes = "0"+minutes;
-        }
-             else {
-            $scope.remainingTime.minutes = minutes;
-        }
-
-             if(seconds < 10){
-            $scope.remainingTime.seconds = "0"+seconds;
-        }
-             else {
-            $scope.remainingTime.seconds = seconds;
-        }*/
-        });
-    }
 
     var isValueBetween = function (value, min ,max) {
         return value >= min && value <= max;
@@ -339,6 +320,21 @@ app.controller('ExAudioController', function($scope, ngAudio){
 
     $scope.toggleCorrect = function () {
         $scope.correctHide = !$scope.correctHide;
+    };
+
+    $scope.createNewAudioExe = function () {
+        if($scope.newAudioExeText.length == 0){
+            $scope.errorAlert = true;
+        }
+        else{
+            $http.get("https://heliraamat.eki.ee/syntees/koduleht.php?haal=15&tekst="+$scope.newAudioExeText).then(function (response) {
+                console.log(response);
+                $scope.audio = ngAudio.load(response.data.mp3url);
+                $scope.successAlert = true;
+                text = $scope.newAudioExeText;
+                $('#audioTextModal').modal('hide');
+            });
+        }
     };
 
     var textCheck = function (value) {
