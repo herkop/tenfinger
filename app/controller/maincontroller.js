@@ -250,7 +250,10 @@ app.controller('ExAudioController', function($scope, $http, ngAudio){
     $scope.textInserted = "";
     $scope.textareaFocus = false;
     $scope.newAudioExeText = "";
-    $scope.errorAlert = false;
+    $scope.errorAlert = {
+        text: "Midagi läks valesti",
+        show: false
+    };
     $scope.successAlert = false;
     $scope.audioExerResult = {
       typed: {
@@ -324,15 +327,27 @@ app.controller('ExAudioController', function($scope, $http, ngAudio){
 
     $scope.createNewAudioExe = function () {
         if($scope.newAudioExeText.length == 0){
-            $scope.errorAlert = true;
+            $scope.errorAlert = {
+                text: "Teksti väli ei tohi olla tühi!",
+                show: true
+            };
         }
         else{
+            $('#loadingExeButton').button('loading');
             $http.get("https://heliraamat.eki.ee/syntees/koduleht.php?haal=15&tekst="+$scope.newAudioExeText).then(function (response) {
-                console.log(response);
                 $scope.audio = ngAudio.load(response.data.mp3url);
                 $scope.successAlert = true;
                 text = $scope.newAudioExeText;
+                $scope.newAudioExeText = "";
+                $scope.errorAlert.show = false;
+                $('#loadingExeButton').button('reset');
                 $('#audioTextModal').modal('hide');
+            }, function(){
+                $scope.errorAlert = {
+                    text: "Kahjuks harjutuse loomine ei õnnestunud! Muuda teksti või proovi hiljem uuesti!",
+                    show: true
+                };
+                $('#loadingExeButton').button('reset');
             });
         }
     };

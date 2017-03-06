@@ -8,9 +8,9 @@
                 </div>
                 <div class="modal-body">
                     <form>
-                        <div class="alert alert-danger alert-dismissable" role="alert" ng-show="errorAlert">
+                        <div class="alert alert-danger alert-dismissable" role="alert" ng-show="errorAlert.show">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <strong>Viga!</strong> Tekst peab olema sisestatud!
+                            <strong>Viga!</strong> {{ errorAlert.text }}
                         </div>
                         <div class="form-inline form-group">
                             <label for="newAudioText">Sisesta tekst</label>
@@ -19,7 +19,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary" type="button" ng-click="createNewAudioExe()">Loo harjutus</button>
+                    <button class="btn btn-primary" id="loadingExeButton" type="button" data-loading-text="<i class='fa fa-spinner fa-pulse'></i> Loon harjutust" ng-click="createNewAudioExe()">Loo harjutus</button>
                     <button class="btn btn-warning" type="button" data-dismiss="modal">Tühista</button>
                 </div>
             </div>
