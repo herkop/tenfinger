@@ -44,7 +44,24 @@ app.controller('ExerciseController', function($scope, $http, keyboard, $cookies,
         });
     }
     $scope.keyboard = keyboard;
+    var keyDownPreviousTime = 0;
+    var typedCharSum = 0;
+    var typedChar = 0;
     $scope.onKeyDown = function ($event) {
+        //speed
+        var keyDownTime = (new Date()).getTime();
+        if (keyDownTime == 0){
+            keyDownPreviousTime = keyDownTime;
+        }
+        else{
+            var keyTime = keyDownTime - keyDownPreviousTime;
+            var sec = keyTime / 1000;
+            $scope.keyboard.speed = Math.floor(60 / sec);
+            keyDownPreviousTime = keyDownTime;
+            typedCharSum += 1;
+            typedChar += $scope.keyboard.speed;
+            $scope.keyboard.avgSpeed = Math.floor(typedChar / typedCharSum);
+        }
         $scope.result = keyboard.getWord();
 
         keyboard.letterTyped($event.key);
@@ -112,15 +129,26 @@ app.controller('MenuController', function($scope, $location){
     };
 });
 
-app.controller('ExController', function($scope, $stateParams, $http, keyboard, $timeout) {
+app.controller('ExController', function($scope, $stateParams, $http, keyboard, $timeout, $state) {
     //$cookies.put('user', 'Tester');
     $scope.keyboard = keyboard;
-    var exes = ["jfjffjjfjjjfffjfjfjjfjff", "dkddkkkddkdkdkdkkkdddkd", "slllssllsllsssllsllslslsl", "aöaöaöaöaöööaaöaöaööaöö", "sösdjklalkdfjjllskkdjjfalsddkjfds"];
+    //var exes = ["jfjffjjfjjjfffjfjfjjfjff", "dkddkkkddkdkdkdkkkdddkd", "slllssllsllsssllsllslslsl", "aöaöaöaöaöööaaöaöaööaöö", "sösdjklalkdfjjllskkdjjfalsddkjfds"];
+    var endMes = {"excellent": "Väga tubli! Võid järgmise harjutuse juurde asuda.", "good": "Tubli! Tegid ainult mõne üksiku vea.", "bad": "Harjuta veel! Liiga palju vigu oled teinud."};
 
     var timeSpent = function () {
       if(keyboard.getStartTime() != 0){
           if(keyboard.getFinishTime() > 0){
               $scope.keyboard.time = keyboard.getDiv();
+              if(keyboard.wrong == 0) {
+                  $scope.exEndMessage = endMes["excellent"];
+              }
+              else if(keyboard.wrong <= 2){
+                  $scope.exEndMessage = endMes["good"];
+              }
+              else{
+                  $scope.exEndMessage = endMes["bad"];
+              }
+              $('#exeEndModal').modal('show');
           }
           else{
               var time = (new Date()).getTime();
@@ -134,7 +162,8 @@ app.controller('ExController', function($scope, $stateParams, $http, keyboard, $
     };
 
     if(!angular.isUndefined($stateParams.number)) {
-        //$scope.number = $stateParams.number;
+        $scope.exNumber = $stateParams.number;
+        $scope.nextExNumber = parseInt($stateParams.number) + 1;
         //$scope.result = exes[$stateParams.number-1];
         $http.get('/currentexec/id/' + $stateParams.number).then(function (response) {
             $scope.exerName = response.data[0].name;
@@ -146,11 +175,28 @@ app.controller('ExController', function($scope, $stateParams, $http, keyboard, $
             $scope.keyboard.correct = keyboard.getCorrect();
             $scope.keyboard.wrong = keyboard.getWrong();
             $scope.keyboard.time = 0;
+            $scope.keyboard.speed = 0;
+            $scope.keyboard.avgSpeed = 0;
             $timeout(timeSpent, 100);
         });
-        //keyboard.setWord(exes[$stateParams.number-1]);
 
-
+        $scope.nextExButton = function(){
+            $('#exeEndModal').modal('hide');
+            $state.go('exercise', {'number':$scope.nextExNumber});
+        };
+        $scope.repeatExButton = function () {
+            $('#exeEndModal').modal('hide');
+            keyboard.setWord(keyboard.getWord());
+            $scope.keyboard.letter_active = keyboard.getActiveLetter();
+            $scope.keyboard.key_active = keyboard.getActiveKey();
+            $scope.keyboard.letter_style = keyboard.getLetterStyle();
+            $scope.keyboard.correct = keyboard.getCorrect();
+            $scope.keyboard.wrong = keyboard.getWrong();
+            $scope.keyboard.time = 0;
+            $scope.keyboard.speed = 0;
+            $scope.keyboard.avgSpeed = 0;
+            $timeout(timeSpent, 100);
+        }
 
     }
 

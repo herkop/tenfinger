@@ -1,6 +1,24 @@
 <div >
+    <div class="modal fade bs-example-modal-sm" id="exeEndModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Harjutus lõppenud</h4>
+                </div>
+                <div class="modal-body">
+                    Valesid: {{ keyboard.wrong }} Aeg: {{ keyboard.time }} Kiirus: {{ keyboard.avgSpeed }} sümbolit minutis<br>
+                    {{ exEndMessage }}
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" ng-click="repeatExButton()" type="button" data-loading-text="<i class='fa fa-spinner fa-pulse'></i> Loon harjutust">Proovi uuesti</button>
+                    <button class="btn btn-warning" ng-click="nextExButton()" type="button">Järgmine</button>
+                </div>
+            </div>
+        </div>
+    </div>
 <h2>{{ exerName }}</h2>
-<div class="stat_info">Õigeid: {{ keyboard.correct }}  Valesid: {{ keyboard.wrong }}  Aeg: {{ keyboard.time }}</div>
+<div class="stat_info">Õigeid: {{ keyboard.correct }}  Valesid: {{ keyboard.wrong }}  Aeg: {{ keyboard.time }} Kiirus: {{ keyboard.avgSpeed }} sümbolit minutis</div>
 <div>
     <span ng-repeat="lett in result track by $index" class="letter" ng-class="{letter_active: keyboard.letter_active == lett+$index, letter_green: keyboard.letter_style[$index], letter_red: (!keyboard.letter_style[$index] && keyboard.letter_style[$index] != undefined)}">{{ lett }}</span>
 </div>
