@@ -58,6 +58,20 @@
 
 }
 
+.match{
+    color: gray;
+}
+
+.ins{
+    color: black;
+    background: #bbffbb;
+}
+
+.del{
+    color: black;
+    background: #ffbbbb;
+}
+
 .alert-margin{
     margin-top: 10px;
 }

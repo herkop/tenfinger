@@ -64,9 +64,10 @@
     <textarea class="form-control" rows="4" ng-disabled="textDisabled" ng-model="textInserted" ng-show="textVisibility"></textarea>
     <div class="answer-text" ng-hide="textVisibility">
         <div class="stat_info">Õigeid: {{ audioExerResult.typed.correct }}  Valesid: {{ audioExerResult.typed.wrong }}  Kokku: {{ audioExerResult.typed.all }}/{{audioExerResult.correct.all}}</div>
-        <span ng-repeat="word in textChecked">
+        <!--<span ng-repeat="word in textChecked">
             <span ng-repeat="lett in word" ng-class="{letter_green: lett.correct, letter_red: !lett.correct}">{{lett.letter}}</span>
-        </span>
+        </span>-->
+        <div diff left-obj="textInserted" right-obj="correctAnswer" options="diffOptions"></div>
         <div>
         <button class="btn btn-primary" ng-click="toggleCorrect()">Näita vastust</button>
         </div>
