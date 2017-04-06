@@ -14,11 +14,14 @@ app.get('/exercise/*', function(req, res) {
   res.sendFile('/views/exercises.html', { root: __dirname});
 });
 
+
+
 app.get('/test', db.getTest);
 app.get('/person/id/:id', db.getPerson);
 app.get('/person/add/:name', db.setPerson);
 app.get('/exec', db.getExercise);
 app.get('/currentexec/id/:id', db.getCurrentExercise);
+app.get('/python/text/:text', db.textPy);
 
 
 app.listen(process.env.PORT || 3100, function(){
