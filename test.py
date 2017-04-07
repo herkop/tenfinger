@@ -1,5 +1,5 @@
 import sys
-import text
+from estnltk import Text
 
 inputText = sys.argv[1]
 text = Text(inputText)
