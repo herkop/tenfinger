@@ -39,22 +39,3 @@ exports.getCurrentExercise = function (req, res) {
         res.json(data.rows);
     })
 };
-
-exports.textPy = function (req, res) {
-    var x = "";
-    console.log("1");
-    x += "1";
-    var spawn = require("child_process").spawn;
-    console.log("2");
-    x += "2";
-    var process = spawn('pyhton', ["test.py", req.params.text]);
-    console.log("3");
-    x += "3";
-    process.stdout.on('data', function(data){
-        console.log("tere");
-        console.log(data);
-        //res.json(data);
-        x += data;
-    });
-    res.json(x);
-};
