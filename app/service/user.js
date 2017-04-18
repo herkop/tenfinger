@@ -20,7 +20,7 @@ app.service('user', function ($cookies, $http) {
        this.id = id;
        var date = new Date();
        date.setDate(date.getDate() + 365 * 10);
-       $cookies.put('user', id, {expires: date});
+       $cookies.put('user', id, {expires: date, secure:true});
    };
 
    this.getUser = function () {
