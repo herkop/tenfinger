@@ -454,6 +454,7 @@ app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTe
                 $scope.testAudio.restart();
                 $scope.testAudio = $scope.someAudio.files[$scope.someAudio.location];
                 $scope.testAudio.playbackRate = $scope.sliderPlayback.value;
+                $scope.testAudio.volume = $scope.sliderVolume.value;
                 $timeout(function () {
                     $scope.testAudio.play();
                 }, 100);
@@ -525,6 +526,7 @@ app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTe
             $scope.someAudio.remaining = $scope.someAudio.duration;
             $scope.testAudio = $scope.someAudio.files[0];
             $scope.testAudio.playbackRate = $scope.sliderPlayback.value;
+            $scope.testAudio.volume = $scope.sliderVolume.value;
             $scope.testAudio.play();
             $scope.textDisabled = false;
             $scope.textVisibility = true;
