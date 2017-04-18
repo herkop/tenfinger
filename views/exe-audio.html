@@ -22,7 +22,7 @@
                             </select>
                             <button class="btn btn-primary" ng-click="testVoice()"><span class="glyphicon glyphicon-play" aria-hidden="true"></span>Kuula</button>
                         </div>
-                        <div class="form-inline form-group">
+                        <div class="form-inline form-group" ng-show="newAudioExeTaShow">
                             <label for="newAudioText">{{newAudioExeTaHeader}}</label>
                             <textarea class="form-control" id="newAudioText" ng-model="newAudioExeText" ng-copy="$event.preventDefault();" ng-disabled="newAudioTextDisabled" cols="70" rows="5"></textarea>
                         </div>

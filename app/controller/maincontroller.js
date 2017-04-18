@@ -567,6 +567,7 @@ app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTe
         $scope.newAudioTextDisabled = false;
         $scope.exeAlertInfo = true;
         $scope.errorAlert.show = false;
+        $scope.newAudioExeTaShow = true;
         $scope.newAudioExeText = "";
         $scope.newAudioExeHeader = "Loo uus kuulamise harjutus";
         $scope.newAudioExeTaHeader = "Sisesta tekst";
@@ -578,6 +579,7 @@ app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTe
         $scope.newAudioTextDisabled = true;
         $scope.exeAlertInfo = false;
         $scope.errorAlert.show = false;
+        $scope.newAudioExeTaShow = false;
         $scope.newAudioExeText = text;
         $scope.newAudioExeHeader = "Muuda teksti lugejat";
         $scope.newAudioExeTaHeader = "Sisestatud tekst";
