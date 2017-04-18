@@ -244,7 +244,7 @@ app.controller('ExeMainController', function($scope, $cookies, $http, user){
     }
 });
 
-app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTest, $timeout, audioFiles, $window){
+app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTest, $timeout, $window){
      $scope.sliderVolume = {
         value: 0.5,
         options: {
