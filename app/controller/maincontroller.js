@@ -566,6 +566,8 @@ app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTe
         $scope.exeAlertInfo = true;
         $scope.errorAlert.show = false;
         $scope.newAudioExeText = "";
+        $scope.newAudioExeHeader = "Loo uus kuulamise harjutus";
+        $scope.newAudioExeTaHeader = "Sisesta tekst";
         $scope.newAudioModalButton = {name: "Loo harjutus", loading: "Loon harjutust"};
         $('#audioTextModal').modal('show');
     };
@@ -575,7 +577,9 @@ app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTe
         $scope.exeAlertInfo = false;
         $scope.errorAlert.show = false;
         $scope.newAudioExeText = text;
-        $scope.newAudioModalButton = {name: "Muuta lugejat", loading: "Muudan lugejat"};
+        $scope.newAudioExeHeader = "Muuda teksti lugejat";
+        $scope.newAudioExeTaHeader = "Sisestatud tekst";
+        $scope.newAudioModalButton = {name: "Muuda lugejat", loading: "Muudan lugejat"};
         $('#audioTextModal').modal('show');
     };
 
