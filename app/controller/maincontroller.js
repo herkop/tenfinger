@@ -382,12 +382,21 @@ app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTe
     $scope.palyNr = 0;
     $scope.audioRepeat = 1;
     $scope.repeatValues = [1, 2, 3];
+    $scope.voiceSelect = 0;
+    $scope.voiceValues = [
+        {value: 15, name: "Tõnu"},
+        {value: 14, name: "Eva"}];
     $scope.repeatDisabled = false;
+    $scope.newAudioTextDisabled = false;
+    $scope.newAudioModalButton = "Loo harjutus";
+        $scope.voice = {
+        15: ngAudio.load("/media/test/1704180143420_5986.mp3"),
+        14: ngAudio.load("/media/test/1704180143110_3422.mp3")
+    };
     audioTest.loadAudio($scope.exampleAudio);
     $timeout(function () {
         $scope.someAudio.duration = audioTest.getDuration();
         $scope.someAudio.remaining = $scope.someAudio.duration;
-        //$scope.someAudio.currentTime = 0.00001;
     },500);
 
 
@@ -546,6 +555,30 @@ app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTe
         $scope.correctHide = !$scope.correctHide;
     };
 
+    $scope.testVoice = function () {
+        if(!angular.isUndefined($scope.voiceSelect.value)){
+            $scope.voice[$scope.voiceSelect.value].play();
+        }
+    };
+
+    $scope.createNewExe = function () {
+        $scope.newAudioTextDisabled = false;
+        $scope.exeAlertInfo = true;
+        $scope.errorAlert.show = false;
+        $scope.newAudioExeText = "";
+        $scope.newAudioModalButton = {name: "Loo harjutus", loading: "Loon harjutust"};
+        $('#audioTextModal').modal('show');
+    };
+
+    $scope.changeVoice = function () {
+        $scope.newAudioTextDisabled = true;
+        $scope.exeAlertInfo = false;
+        $scope.errorAlert.show = false;
+        $scope.newAudioExeText = text;
+        $scope.newAudioModalButton = {name: "Muuta lugejat", loading: "Muudan lugejat"};
+        $('#audioTextModal').modal('show');
+    };
+
     $scope.createNewAudioExe = function () {
         if($scope.newAudioExeText.length == 0){
             $scope.errorAlert = {
@@ -555,7 +588,7 @@ app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTe
         }
         else{
             $('#loadingExeButton').button('loading');
-            audioTest.getAudioFiles(textToSentencesL($scope.newAudioExeText)).then(function (data) {
+            audioTest.getAudioFiles(textToSentencesL($scope.newAudioExeText), $scope.voiceSelect.value).then(function (data) {
                 audioTest.loadAudioL(data);
                 $timeout(function(){
                 $scope.someAudio.duration = audioTest.getDuration();
@@ -569,6 +602,7 @@ app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTe
                 $scope.audioRepeat = 1;
                 $scope.textDisabled = false;
                 $scope.textVisibility = true;
+                started = false;
                 $scope.correctAnswer = "";
                 $('#loadingExeButton').button('reset');
                 $('#audioTextModal').modal('hide');

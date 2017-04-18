@@ -8,7 +8,7 @@
                 </div>
                 <div class="modal-body">
                     <form>
-                        <div class="alert alert-info alert-dismissible" role="alert">
+                        <div class="alert alert-info alert-dismissible" role="alert" ng-show="exeAlertInfo">
                             <strong>Tähelepanu!</strong> Sisestatud tekst muudetakse lauseteks, et oleks võimalik kasutada lause kordamist.
                             Selleks vaadeldakse, et lause lõpus oleks lõpumärk(.!?), edasi täpselt üks tühik ja järgmine lause algaks suure tähega!
                         </div>
@@ -16,14 +16,20 @@
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                             <strong>Viga!</strong> {{ errorAlert.text }}
                         </div>
+                        <div class="form-inline">
+                            <label>Lugeja hääl</label>
+                            <select class="form-control select-m" ng-model="voiceSelect" ng-init="voiceSelect = voiceValues[0]" ng-options="voice.name for voice in voiceValues">
+                            </select>
+                            <button class="btn btn-primary" ng-click="testVoice()"><span class="glyphicon glyphicon-play" aria-hidden="true"></span>Kuula</button>
+                        </div>
                         <div class="form-inline form-group">
                             <label for="newAudioText">Sisesta tekst</label>
-                            <textarea class="form-control" id="newAudioText" ng-model="newAudioExeText" cols="70" rows="5"></textarea>
+                            <textarea class="form-control" id="newAudioText" ng-model="newAudioExeText" ng-copy="$event.preventDefault();" ng-disabled="newAudioTextDisabled" cols="70" rows="5"></textarea>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary" id="loadingExeButton" type="button" data-loading-text="<i class='fa fa-spinner fa-pulse'></i> Loon harjutust" ng-click="createNewAudioExe()">Loo harjutus</button>
+                    <button class="btn btn-primary" id="loadingExeButton" type="button" data-loading-text="<i class='fa fa-spinner fa-pulse'></i> {{newAudioModalButton.loading}}" ng-click="createNewAudioExe()">{{newAudioModalButton.name}}</button>
                     <button class="btn btn-warning" type="button" data-dismiss="modal">Tühista</button>
                 </div>
             </div>
@@ -54,7 +60,7 @@
     </div>
     <div class="audio-slt">
         <div clasS="slt">
-            <div class="slt-header">Kordus</div>
+            <div class="slt-header">Lause lugemiste arv</div>
             <div class="slt-body">
                 <select class="form-control select-small" ng-model="audioRepeat" ng-init="audioRepeat = repeatValues[0]" ng-disabled="repeatDisabled" ng-options="repeat for repeat in repeatValues">
                 </select>
@@ -63,7 +69,8 @@
     </div>
     <button class="btn btn-primary" ng-click="endExe()">Lõpeta</button>
     <button class="btn btn-primary" ng-click="startExe()"><span class="glyphicon glyphicon-play" aria-hidden="true"></span> Alusta</button>
-    <button class="btn btn-info" data-toggle="modal" data-target="#audioTextModal">Sisesta oma tekst</button>
+    <button class="btn btn-info" ng-click="createNewExe()">Sisesta oma tekst</button>
+    <button class="btn btn-info" ng-click="changeVoice()">Muuda lugejat</button>
     <div class="alert alert-success alert-dismissible alert-margin" role="alert" ng-show="successAlert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <strong>Õnnestus!</strong> Uus harjutus on loodud ning harjutamiseks vajuta nuppu Alusta.

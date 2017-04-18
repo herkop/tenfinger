@@ -2,11 +2,14 @@ var app = angular.module('TenFingers');
 app.service('audioTest', function ($q, $http, ngAudio) {
     var audio = [];
 
-    this.getAudioFiles = function(sentences) {
+    this.getAudioFiles = function(sentences, voice) {
+        if(angular.isUndefined(voice)){
+            voice = 15;
+        }
         var urls = sentences.map(function (url) {
             var deffered = $q.defer();
 
-            $http.get("https://heliraamat.eki.ee/syntees/koduleht.php?haal=15&tekst=" + url).then(function (response) {
+            $http.get("https://heliraamat.eki.ee/syntees/koduleht.php?haal="+ voice +"&tekst=" + url).then(function (response) {
                     deffered.resolve(response);
                 },
                 function (error) {
