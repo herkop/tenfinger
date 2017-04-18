@@ -283,7 +283,7 @@ app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTe
         minutes: "00",
         seconds: "00"
     };
-    $scope.audioTesting = ngAudio.load('/media/speech/1702181246580_6969.mp3');
+    $scope.audioTesting = ngAudio.load('/media/test/1702181246580_6969.mp3');
     $scope.audio = ngAudio.load('/media/speech/1702141236060_4785.mp3');
     $scope.vol = 0.5;
     $scope.playb = 1.0;
