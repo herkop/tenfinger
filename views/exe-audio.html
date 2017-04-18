@@ -48,6 +48,15 @@
             </div>
         </div>
     </div>
+    <div class="audio-slt">
+        <div clasS="slt">
+            <div class="slt-header">Kordus</div>
+            <div class="slt-body">
+                <select class="form-control select-small" ng-model="audioRepeat" ng-init="audioRepeat = repeatValues[0]" ng-disabled="repeatDisabled" ng-options="repeat for repeat in repeatValues">
+                </select>
+            </div>
+        </div>
+    </div>
     <button class="btn btn-primary" ng-click="endExe()">Lõpeta</button>
     <button class="btn btn-primary" ng-click="startExe()"><span class="glyphicon glyphicon-play" aria-hidden="true"></span> Alusta</button>
     <button class="btn btn-info" data-toggle="modal" data-target="#audioTextModal">Sisesta oma tekst</button>
@@ -56,12 +65,12 @@
         <strong>Õnnestus!</strong> Uus harjutus on loodud ning harjutamiseks vajuta nuppu Alusta.
     </div>
     <div class="audio-line" ng-show="textVisibility">
-        <div class="audio-track">{{audio.remaining | audioTrackTime}}</div>
+        <div class="audio-track">{{someAudio.remaining | audioTrackTime}}</div>
         <div class="slider-progress">
             <rzslider rz-slider-model="sliderProgress.value" rz-slider-options="sliderProgress.options"></rzslider>
         </div>
     </div>
-    <textarea class="form-control" rows="4" ng-disabled="textDisabled" ng-model="textInserted" ng-show="textVisibility"></textarea>
+    <textarea id="textarea" class="form-control" ng-paste="$event.preventDefault();" rows="4" ng-disabled="textDisabled" ng-model="textInserted" ng-show="textVisibility"></textarea>
     <div class="answer-text" ng-hide="textVisibility">
         <div class="stat_info">Õigeid: {{ audioExerResult.typed.correct }}  Valesid: {{ audioExerResult.typed.wrong }}  Kokku: {{ audioExerResult.typed.all }}/{{audioExerResult.correct.all}}</div>
         <!--<span ng-repeat="word in textChecked">

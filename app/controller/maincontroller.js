@@ -244,7 +244,7 @@ app.controller('ExeMainController', function($scope, $cookies, $http, user){
     }
 });
 
-app.controller('ExAudioController', function($scope, $http, ngAudio){
+app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTest, $timeout, audioFiles, $window){
      $scope.sliderVolume = {
         value: 0.5,
         options: {
@@ -330,6 +330,67 @@ app.controller('ExAudioController', function($scope, $http, ngAudio){
         }
     };
 
+    $scope.exampleAudio = {
+      0: {
+          text: "Oletame, et oled korilane õunte sünnimaal Kasahstanis.",
+          file: "/media/speech/1704130406020_6128.mp3"
+      },
+        1: {
+            text: "Regulaarselt nälga tundes oled õnnelik märgates eemal õunapuude salu.",
+            file: "/media/speech/1704130406020_8899.mp3"
+        },
+        2: {
+            text: "Õnnetuseks märkad, et samas suunas vaatab teisigi tühjusest koriseva kõhuga indiviide.",
+            file: "/media/speech/1704130406020_5194.mp3"
+        },
+        3: {
+            text: "Selles oletuse mängus on sul kasutada omapärane laserrelv, millest tulistades saad muuta pihtasaaja ajutiselt liikumisvõimetuks.",
+            file: "/media/speech/1704130406020_4418.mp3"
+        },
+        4: {
+            text: "Paraku pead arvestama, et konkurentidel on kasutuses samasugune relv sinu tulistamiseks.",
+            file: "/media/speech/1704130406020_4536.mp3"
+        },
+        5: {
+            text: "Mis sa arvad, kas keskendud rohkem õunte kogumisele või püüad pigem teisi õuntest eemal hoida?",
+            file: "/media/speech/1704130406020_4336.mp3"
+        },
+        6: {
+            text: "Võime spekuleerida, kuidas valiks USA värske president, aga kui sa oled nutikas, nõuad otsustamiseks täiendavat informatsiooni.",
+            file: "/media/speech/1704130406020_9798.mp3"
+        },
+        7: {
+            text: "Tõenäoliselt tahad teada, kas õunu on palju või vähe.",
+            file: "/media/speech/1704130406020_8061.mp3"
+        },
+        8: {
+            text: "Kui õunu on vähe, tasub keskenduda konkurentide segamisele.",
+            file: "/media/speech/1704130406020_7667.mp3"
+        },
+        9: {
+            text: "Kui õunu on rohkem, võiksid olla inimlikum, süüa ise kõht täis ja jätta teised rahule.",
+            file: "/media/speech/1704130406020_4570.mp3"
+        }
+    };
+
+    $scope.someAudio = {
+        duration: 0,
+        currentTime: 0,
+        remaining: 0
+    };
+    $scope.testAudio = {};
+    $scope.palyNr = 0;
+    $scope.audioRepeat = 1;
+    $scope.repeatValues = [1, 2, 3];
+    $scope.repeatDisabled = false;
+    audioTest.loadAudio($scope.exampleAudio);
+    $timeout(function () {
+        $scope.someAudio.duration = audioTest.getDuration();
+        $scope.someAudio.remaining = $scope.someAudio.duration;
+        //$scope.someAudio.currentTime = 0.00001;
+    },500);
+
+
     var text = "Oletame, et oled korilane õunte sünnimaal Kasahstanis. Regulaarselt nälga tundes oled õnnelik märgates eemal õunapuude salu. Õnnetuseks märkad, et samas suunas vaatab teisigi tühjusest koriseva kõhuga indiviide. Selles oletuse mängus on sul kasutada omapärane laserrelv, millest tulistades saad muuta pihtasaaja ajutiselt liikumisvõimetuks. Paraku pead arvestama, et konkurentidel on kasutuses samasugune relv sinu tulistamiseks. Mis sa arvad, kas keskendud rohkem õunte kogumisele või püüad pigem teisi õuntest eemal hoida? Võime spekuleerida, kuidas valiks USA värske president, aga kui sa oled nutikas, nõuad otsustamiseks täiendavat informatsiooni. Tõenäoliselt tahad teada, kas õunu on palju või vähe. Kui õunu on vähe, tasub keskenduda konkurentide segamisele. Kui õunu on rohkem, võiksid olla inimlikum, süüa ise kõht täis ja jätta teised rahule.";
     $scope.textfirst = text;
     $scope.$watchCollection("sliderVolume.value", function () {
@@ -343,41 +404,137 @@ app.controller('ExAudioController', function($scope, $http, ngAudio){
         if(isValueBetween($scope.sliderPlayback.value, 0.5, 1.5)){
             $scope.audioTesting.playbackRate = $scope.sliderPlayback.value;
             $scope.audio.playbackRate = $scope.sliderPlayback.value;
+            //repeat audio
+            $scope.testAudio.playbackRate = $scope.sliderPlayback.value;
         }
     });
 
     $scope.$watchCollection("audio.progress", function () {
        $scope.sliderProgress.value = $scope.audio.progress;
     });
+    var lastChange = 0.0;
+    $scope.$watch("testAudio.currentTime", function () {
 
+        if(!angular.isUndefined($scope.testAudio.currentTime)) {
+            if($scope.testAudio.currentTime - lastChange > 0){
+                $scope.someAudio.currentTime += parseFloat($scope.testAudio.currentTime - lastChange);
+            }
+            lastChange = $scope.testAudio.currentTime;
+            $scope.sliderProgress.value = $scope.someAudio.currentTime / $scope.someAudio.duration;
+        }
+    });
+
+    $scope.$watch("audioRepeat", function (){
+        $scope.someAudio.duration = audioTest.getDuration($scope.audioRepeat);
+        if (!isNaN($scope.someAudio.duration)) {
+            $scope.someAudio.remaining = $scope.someAudio.duration;
+        }
+    });
+
+    $scope.$watch("someAudio.currentTime", function () {
+        if ($scope.someAudio.duration - $scope.someAudio.currentTime > 0) {
+            $scope.someAudio.remaining = $scope.someAudio.duration - $scope.someAudio.currentTime;
+        }
+    });
+
+    $scope.$watch("testAudio.remaining", function () {
+        if($scope.testAudio.remaining == 0) {
+
+            $scope.someAudio.location += 1;
+            if (!angular.isUndefined($scope.someAudio.files[$scope.someAudio.location])) {
+                $scope.testAudio.restart();
+                $scope.testAudio = $scope.someAudio.files[$scope.someAudio.location];
+                $scope.testAudio.playbackRate = $scope.sliderPlayback.value;
+                $timeout(function () {
+                    $scope.testAudio.play();
+                }, 100);
+            }
+
+        }
+    });
+
+    var textToSentences = function(text) {
+        var sentences = {};
+        var lastEnd = 0;
+        var sentNr = 0;
+        for(var i = 0; i < text.length; i++){
+            if(text[i] == "." || text[i] == "!" || text[i] == "?"){
+                if(i+2 < text.length){
+                    if(text[i+1] == " " && text[i+2] == text[i+2].toUpperCase()){
+                        sentences[sentNr] = {"text": text.slice(lastEnd, i+1)};
+                        lastEnd = i+2;
+                        sentNr += 1;
+                    }
+                }
+                else if(angular.isUndefined(text[i+1])){
+                    sentences[sentNr] = {"text": text.slice(lastEnd, i+1)};
+                    lastEnd = i+2;
+                    sentNr += 1;
+                }
+            }
+        }
+        return sentences;
+    };
+
+    var textToSentencesL = function(text) {
+        var sentences = [];
+        var lastEnd = 0;
+        var sentNr = 0;
+        for(var i = 0; i < text.length; i++){
+            if(text[i] == "." || text[i] == "!" || text[i] == "?"){
+                if(i+2 < text.length){
+                    if(text[i+1] == " " && text[i+2] == text[i+2].toUpperCase()){
+                        sentences.push(text.slice(lastEnd, i+1));
+                        lastEnd = i+2;
+                        sentNr += 1;
+                    }
+                }
+                else if(angular.isUndefined(text[i+1])){
+                    sentences.push(text.slice(lastEnd, i+1));
+                    lastEnd = i+2;
+                    sentNr += 1;
+                }
+            }
+        }
+        return sentences;
+    };
     var isValueBetween = function (value, min ,max) {
         return value >= min && value <= max;
     };
     $scope.startExe = function () {
         if(!started) {
 
-            //$scope.audio.volume = $scope.vol;
-            //console.log($scope.audio.playbackRate);
             started = true;
             $scope.textareaFocus = true;
-            $scope.audio.play();
+            //$scope.audio.play();
             $scope.sliderVolume.options.disabled = true;
             $scope.sliderPlayback.options.disabled = true;
-
-
-            //$scope.audio.playbackRate = $scope.playb;
+            $scope.repeatDisabled = true;
+            $scope.someAudio.files = audioTest.playAudio($scope.audioRepeat).files;
+            $scope.someAudio.location = 0;
+            $scope.someAudio.currentTime = 0;
+            $scope.someAudio.remaining = $scope.someAudio.duration;
+            $scope.testAudio = $scope.someAudio.files[0];
+            $scope.testAudio.playbackRate = $scope.sliderPlayback.value;
+            $scope.testAudio.play();
             $scope.textDisabled = false;
             $scope.textVisibility = true;
             $scope.correctAnswer = "";
+            $timeout(function() {
+                var element = $window.document.getElementById("textarea");
+                if(element)
+                    element.focus();
+            });
         }
     };
     $scope.endExe = function () {
         if(started){
             started = false;
-            $scope.audio.restart();
+            $scope.testAudio.restart();
             $scope.textareaFocus = false;
             $scope.sliderVolume.options.disabled = false;
             $scope.sliderPlayback.options.disabled = false;
+            $scope.repeatDisabled = false;
             $scope.textDisabled = true;
             $scope.textVisibility = false;
             $scope.correctAnswer = text;
@@ -398,14 +555,23 @@ app.controller('ExAudioController', function($scope, $http, ngAudio){
         }
         else{
             $('#loadingExeButton').button('loading');
-            $http.get("https://heliraamat.eki.ee/syntees/koduleht.php?haal=15&tekst="+$scope.newAudioExeText).then(function (response) {
-                $scope.audio = ngAudio.load(response.data.mp3url);
+            audioTest.getAudioFiles(textToSentencesL($scope.newAudioExeText)).then(function (data) {
+                audioTest.loadAudioL(data);
+                $timeout(function(){
+                $scope.someAudio.duration = audioTest.getDuration();
+                $scope.someAudio.remaining = $scope.someAudio.duration;
                 $scope.successAlert = true;
                 text = $scope.newAudioExeText;
                 $scope.newAudioExeText = "";
                 $scope.errorAlert.show = false;
+                $scope.someAudio.currentTime = 0;
+                $scope.sliderProgress.value = 0;
+                $scope.textDisabled = false;
+                $scope.textVisibility = true;
+                $scope.correctAnswer = "";
                 $('#loadingExeButton').button('reset');
                 $('#audioTextModal').modal('hide');
+                }, 500);
             }, function(){
                 $scope.errorAlert = {
                     text: "Kahjuks harjutuse loomine ei õnnestunud! Muuda teksti või proovi hiljem uuesti!",
@@ -413,6 +579,7 @@ app.controller('ExAudioController', function($scope, $http, ngAudio){
                 };
                 $('#loadingExeButton').button('reset');
             });
+
         }
     };
 
