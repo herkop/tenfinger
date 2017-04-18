@@ -8,6 +8,10 @@
                 </div>
                 <div class="modal-body">
                     <form>
+                        <div class="alert alert-info alert-dismissible" role="alert">
+                            <strong>Tähelepanu!</strong> Sisestatud tekst muudetakse lauseteks, et oleks võimalik kasutada lause kordamist.
+                            Selleks vaadeldakse, et lause lõpus oleks lõpumärk(.!?), edasi täpselt üks tühik ja järgmine lause algaks suure tähega!
+                        </div>
                         <div class="alert alert-danger alert-dismissable" role="alert" ng-show="errorAlert.show">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                             <strong>Viga!</strong> {{ errorAlert.text }}

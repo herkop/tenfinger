@@ -566,6 +566,7 @@ app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTe
                 $scope.errorAlert.show = false;
                 $scope.someAudio.currentTime = 0;
                 $scope.sliderProgress.value = 0;
+                $scope.audioRepeat = 1;
                 $scope.textDisabled = false;
                 $scope.textVisibility = true;
                 $scope.correctAnswer = "";

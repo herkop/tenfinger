@@ -17,7 +17,7 @@ app.service('audioTest', function ($q, $http, ngAudio) {
         var deffered1 = $q.defer();
         $q.all(urls).then(function (arrayOfResults) {
             deffered1.resolve(arrayOfResults.map(function (url) {
-                return url.data.mp3url;
+                return "https" + url.data.mp3url.slice(4);
             }));
         });
         return deffered1.promise;
