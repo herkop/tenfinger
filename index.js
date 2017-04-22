@@ -20,6 +20,8 @@ app.get('/person/id/:id', db.getPerson);
 app.get('/person/add/:name', db.setPerson);
 app.get('/exec', db.getExercise);
 app.get('/currentexec/id/:id', db.getCurrentExercise);
+app.get('/setting/:person', db.getSettings);
+app.get('/updateset/:person/:setting/:value', db.updateSettings);
 
 
 app.listen(process.env.PORT || 3100, function(){

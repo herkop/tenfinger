@@ -33,4 +33,9 @@ app.service('user', function ($cookies, $http) {
        this.reNewUser();
        return isUser;
    };
+
+   this.getUserId = function () {
+       this.reNewUser();
+       return id;
+   }
 });

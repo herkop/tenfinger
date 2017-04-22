@@ -40,6 +40,22 @@ app.controller('ExerciseController', function($scope, $http, keyboard, $cookies,
             else {
                 $scope.user.name = data[0].name;
                 $scope.user.isUser = true;
+                $http.get("/setting/" + user.getUserId()).then(function (response) {
+                    for(var elem in response.data){
+                        if (response.data[elem].hasOwnProperty('setting_id')) {
+                            if (response.data[elem]['setting_id'] == 1) {
+                                    $scope.switchLetterStyle.value = !(response.data[elem].value == 'false');
+                            }
+                            else if (response.data[elem]['setting_id'] == 2) {
+                                    $scope.switchKeyboard.value = !(response.data[elem].value == 'false');
+                            }
+                            else if (response.data[elem]['setting_id'] == 3) {
+                                    $scope.switchKeyboardInst.value = !(response.data[elem].value == 'false');
+
+                            }
+                        }
+                    }
+                })
             }
         });
     }
@@ -73,6 +89,7 @@ app.controller('ExerciseController', function($scope, $http, keyboard, $cookies,
         $scope.keyboard.wrong = keyboard.getWrong();
 
     };
+    var pageLoaded = false;
     $scope.$watchCollection('switchLetterStyle', function () {
        if($scope.switchLetterStyle.value){
            keyboard.setLetterHint(true);
@@ -81,6 +98,9 @@ app.controller('ExerciseController', function($scope, $http, keyboard, $cookies,
        else{
            keyboard.setLetterHint(false);
            $scope.keyboard.letter_style = [];
+       }
+       if(pageLoaded) {
+           updateSettingChange(1, $scope.switchLetterStyle.value);
        }
     });
     $scope.$watchCollection('switchKeyboard.value', function () {
@@ -91,6 +111,9 @@ app.controller('ExerciseController', function($scope, $http, keyboard, $cookies,
         else {
             $scope.switchKeyboardInst.disable = true;
             $scope.selectKeyboardLayout.disable = true;
+        }
+        if(pageLoaded) {
+            updateSettingChange(2, $scope.switchKeyboard.value);
         }
     });
     $scope.$watchCollection('switchKeyboardInst', function () {
@@ -104,10 +127,23 @@ app.controller('ExerciseController', function($scope, $http, keyboard, $cookies,
            $scope.keyboard.key_active = null;
            $scope.key_wrong = null;
        }
+       if(pageLoaded) {
+           updateSettingChange(3, $scope.switchKeyboardInst.value);
+       }
     });
     $scope.saveSettings = function () {
         //console.log($scope.switchKeyboard.value);
-    }
+    };
+    angular.element(document).ready(function () {
+        pageLoaded = true;
+    });
+    var updateSettingChange = function (id, value) {
+        if(user.getUser() != null) {
+            $http.get("/updateset/" + user.getUserId() + "/" + id + "/" + value).then(function () {
+                var c = true;
+            });
+        }
+    };
 });
 
 app.controller('MenuController', function($scope, $location){
