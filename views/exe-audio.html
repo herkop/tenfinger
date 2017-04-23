@@ -66,6 +66,13 @@
                 </select>
             </div>
         </div>
+        <div clasS="slt">
+            <div class="slt-header">Lausete vaheline paus sekundites</div>
+            <div class="slt-body">
+                <select class="form-control select-small" ng-model="audioPause" ng-init="audioPause = pauseValues[0]" ng-disabled="pauseDisabled" ng-options="pause for pause in pauseValues">
+                </select>
+            </div>
+        </div>
     </div>
     <button class="btn btn-primary" ng-click="endExe()">Lõpeta</button>
     <button class="btn btn-primary" ng-click="startExe()"><span class="glyphicon glyphicon-play" aria-hidden="true"></span> Alusta</button>

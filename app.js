@@ -16,9 +16,15 @@ app.config(function($stateProvider, $locationProvider, $qProvider) {
             resolve: {}
         })
         .state('exerciseAudio', {
-            url: '/exercise/audio',
+            url: '/exercise/advanced/audio',
             templateUrl: '/views/exe-audio.html',
             controller: 'ExAudioController',
+            resolve: {}
+        })
+        .state('exerciseText', {
+            url: '/exercise/advanced/text',
+            templateUrl: '/views/exe-text.html',
+            controller: 'ExTextController',
             resolve: {}
         });
 

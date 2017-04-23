@@ -111,6 +111,7 @@
 
 .slt{
     float: left;
+    margin-right: 10px;
 }
 
 .slt-header{
@@ -123,6 +124,11 @@
     float: left;
 }
 
+.exeText{
+    width: 900px;
+    text-align: justify;
+}
+
 .answer-text{
     width: 900px;
     margin-top: 10px;
@@ -131,6 +137,10 @@
 .letter{
     font-size: large;
     padding: 5px;
+    font-weight: bold;
+}
+
+.text-letter{
     font-weight: bold;
 }
 

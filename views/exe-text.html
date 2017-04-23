@@ -1,0 +1,10 @@
+<div >
+
+    <h2>Pikk tekst</h2>
+    <div class="stat_info">Õigeid: {{ keyboard.correct }}  Valesid: {{ keyboard.wrong }}  Aeg: {{ keyboard.time }} Kiirus: {{ keyboard.avgSpeed }} sümbolit minutis</div>
+    <div class="exeText">
+        <span ng-repeat="lett in text track by $index" class="text-letter" ng-class="{letter_active: keyboard.letter_active == lett+$index, letter_green: keyboard.letter_style[$index], letter_red: (!keyboard.letter_style[$index] && keyboard.letter_style[$index] != undefined)}">{{ lett }}</span>
+    </div>
+    <!--<div ng-show="switchKeyboard.value" ng-include="'views/keyboard.html'"></div>-->
+    <!--<canvas id="myCanvas" hieght="400" width="400"></canvas>-->
+</div>

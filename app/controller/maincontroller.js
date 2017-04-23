@@ -65,6 +65,10 @@ app.controller('ExerciseController', function($scope, $http, keyboard, $cookies,
     var typedChar = 0;
     $scope.onKeyDown = function ($event) {
         //speed
+        if($event.keyCode == 32 && $event.target == document.body) {
+            $event.preventDefault();
+            //return false;
+        }
         var keyDownTime = (new Date()).getTime();
         if (keyDownTime == 0){
             keyDownPreviousTime = keyDownTime;
@@ -79,15 +83,15 @@ app.controller('ExerciseController', function($scope, $http, keyboard, $cookies,
             $scope.keyboard.avgSpeed = Math.floor(typedChar / typedCharSum);
         }
         $scope.result = keyboard.getWord();
-
-        keyboard.letterTyped($event.key);
-        $scope.keyboard.letter_active = keyboard.getActiveLetter();
-        $scope.keyboard.key_active = keyboard.getActiveKey();
-        $scope.keyboard.letter_style = keyboard.getLetterStyle();
-        $scope.key_wrong = keyboard.getWrongKey();
-        $scope.keyboard.correct = keyboard.getCorrect();
-        $scope.keyboard.wrong = keyboard.getWrong();
-
+        console.log($event.key);
+        if($event.key != 'Shift' && $event.key != 'Alt' && $event.key != 'Control' && $event.key != 'AltGraph') {
+            $scope.keyboard.letter_active = keyboard.getActiveLetter();
+            $scope.keyboard.key_active = keyboard.getActiveKey();
+            $scope.keyboard.letter_style = keyboard.getLetterStyle();
+            $scope.key_wrong = keyboard.getWrongKey();
+            $scope.keyboard.correct = keyboard.getCorrect();
+            $scope.keyboard.wrong = keyboard.getWrong();
+        }
     };
     var pageLoaded = false;
     $scope.$watchCollection('switchLetterStyle', function () {
@@ -149,7 +153,8 @@ app.controller('ExerciseController', function($scope, $http, keyboard, $cookies,
 app.controller('MenuController', function($scope, $location){
     $scope.menu = {
         begin: true,
-        audio: true
+        advanced: true,
+        mine: true
     };
     $scope.active = function(loc){
         var hrefLocation = $location.path().split("/");
@@ -157,8 +162,11 @@ app.controller('MenuController', function($scope, $location){
             if(hrefLocation[2] == "begin"){
                 $scope.menu.begin = false;
             }
-            else if(hrefLocation[2] == "audio"){
-                $scope.menu.audio = false;
+            else if(hrefLocation[2] == "advanced"){
+                $scope.menu.advanced = false;
+            }
+            else if(hrefLocation[2] == "mine"){
+                $scope.menu.mine = false;
             }
         }
         return loc == $location.path();
@@ -278,6 +286,19 @@ app.controller('ExeMainController', function($scope, $cookies, $http, user){
         });
 
     }
+});
+
+app.controller('ExTextController', function ($scope, keyboard) {
+    $scope.text = "Oletame, et oled korilane õunte sünnimaal Kasahstanis. Regulaarselt nälga tundes oled õnnelik märgates eemal õunapuude salu. Õnnetuseks märkad, et samas suunas vaatab teisigi tühjusest koriseva kõhuga indiviide. Selles oletuse mängus on sul kasutada omapärane laserrelv, millest tulistades saad muuta pihtasaaja ajutiselt liikumisvõimetuks. Paraku pead arvestama, et konkurentidel on kasutuses samasugune relv sinu tulistamiseks. Mis sa arvad, kas keskendud rohkem õunte kogumisele või püüad pigem teisi õuntest eemal hoida? Võime spekuleerida, kuidas valiks USA värske president, aga kui sa oled nutikas, nõuad otsustamiseks täiendavat informatsiooni. Tõenäoliselt tahad teada, kas õunu on palju või vähe. Kui õunu on vähe, tasub keskenduda konkurentide segamisele. Kui õunu on rohkem, võiksid olla inimlikum, süüa ise kõht täis ja jätta teised rahule.";
+    keyboard.setWord($scope.text);
+    $scope.keyboard.letter_active = keyboard.getActiveLetter();
+    $scope.keyboard.key_active = keyboard.getActiveKey();
+    $scope.keyboard.letter_style = keyboard.getLetterStyle();
+    $scope.keyboard.correct = keyboard.getCorrect();
+    $scope.keyboard.wrong = keyboard.getWrong();
+    $scope.keyboard.time = 0;
+    $scope.keyboard.speed = 0;
+    $scope.keyboard.avgSpeed = 0;
 });
 
 app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTest, $timeout, $window){
@@ -418,11 +439,14 @@ app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTe
     $scope.palyNr = 0;
     $scope.audioRepeat = 1;
     $scope.repeatValues = [1, 2, 3];
+    $scope.audioPause = 1;
+    $scope.pauseValues = [1, 2, 3, 4, 5];
     $scope.voiceSelect = 0;
     $scope.voiceValues = [
         {value: 15, name: "Tõnu"},
         {value: 14, name: "Eva"}];
     $scope.repeatDisabled = false;
+    $scope.pauseDisabled = false;
     $scope.newAudioTextDisabled = false;
     $scope.newAudioModalButton = "Loo harjutus";
         $scope.voice = {
@@ -493,7 +517,7 @@ app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTe
                 $scope.testAudio.volume = $scope.sliderVolume.value;
                 $timeout(function () {
                     $scope.testAudio.play();
-                }, 100);
+                }, $scope.audioPause * 1000);
             }
 
         }
@@ -556,6 +580,7 @@ app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTe
             $scope.sliderVolume.options.disabled = true;
             $scope.sliderPlayback.options.disabled = true;
             $scope.repeatDisabled = true;
+            $scope.pauseDisabled = true;
             $scope.someAudio.files = audioTest.playAudio($scope.audioRepeat).files;
             $scope.someAudio.location = 0;
             $scope.someAudio.currentTime = 0;
@@ -582,6 +607,7 @@ app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTe
             $scope.sliderVolume.options.disabled = false;
             $scope.sliderPlayback.options.disabled = false;
             $scope.repeatDisabled = false;
+            $scope.pauseDisabled = false;
             $scope.textDisabled = true;
             $scope.textVisibility = false;
             $scope.correctAnswer = text;

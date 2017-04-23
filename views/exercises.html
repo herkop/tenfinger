@@ -81,15 +81,31 @@
                     Edasijõudnule
                 </a>
             </div>
-            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo" uib-collapse="menu.audio">
+            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo" uib-collapse="menu.advanced">
                 <div class="">
                     <div class="list-group">
                         <!--<a ng-repeat="exer in exercise" ui-sref="exercise({number: {{exer.id}}})" class="list-group-item" ng-class="{active: active('/exercise/{{exer.id}}')}">{{ exer.name }}</a>-->
-                        <a href="/exercise/audio" class="list-group-item" ng-class="{active: active('/exercise/audio')}">Kuulamisega</a>
+                        <a href="/exercise/advanced/text" class="list-group-item" ng-class="{active: active('/exercise/advanced/text')}" ng-hide="true">Pikk tekst</a>
+                        <a href="/exercise/advanced/audio" class="list-group-item" ng-class="{active: active('/exercise/advanced/audio')}">Kuulamine</a>
                     </div>
                 </div>
             </div>
          </div>
+        <div class="panel" ng-hide="true">
+            <div class="" role="tab" id="headingThree">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseOne" class="list-group-item">
+                    Minu harjutused
+                </a>
+            </div>
+            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree" uib-collapse="menu.mine">
+                <div class="">
+                    <div class="list-group">
+                        <!--<a ng-repeat="exer in exercise" ui-sref="exercise({number: {{exer.id}}})" class="list-group-item" ng-class="{active: active('/exercise/{{exer.id}}')}">{{ exer.name }}</a>-->
+                        <a href="/exercise" class="list-group-item" ng-class="{active: active('')}">Loo </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <div class="content" ng-controller="ExController">
