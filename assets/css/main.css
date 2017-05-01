@@ -297,3 +297,71 @@
 .key_wrong{
     background-color: #d43f3a;
 }
+
+ul.sorting-list{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sorting-elem{
+    background-color: #CBDAFC;
+    border: 1px solid #BEBEBE;
+    display: block;
+    width: 420px;
+    min-height: 40px;
+    margin: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.sorting-drag{
+    cursor: move;
+    float: left;
+    padding: 9px 9px 0px 9px;
+    font-weight: bold;
+}
+
+.sorting-add{
+    color: green;
+    cursor: pointer;
+    float: left;
+    padding: 10px 8px 10px 8px;
+}
+
+.sorting-input{
+    margin-top: 2px;
+}
+
+.sorting-remove, .sorting-remove:hover{
+    color: red;
+    float: right;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.sorting-type{
+    margin-top: 1px;
+}
+
+.sorting-text{
+    margin: 10px;
+}
+
+.sorting-new{
+    opacity: 0.5;
+}
+.placeholder{
+    background-color: #F2FFF2;
+    height: 40px;
+    width: 420px;
+    border: 1px dashed #027A00;
+    margin: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}

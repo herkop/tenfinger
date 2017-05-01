@@ -59,7 +59,7 @@
     </div>
 </nav>
 <div class="left_menu" ng-controller="MenuController">
-    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false">
         <div class="panel">
             <div class="" role="tab" id="headingOne">
                 <a role="button" data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" class="list-group-item">
@@ -85,13 +85,22 @@
                 <div class="">
                     <div class="list-group">
                         <!--<a ng-repeat="exer in exercise" ui-sref="exercise({number: {{exer.id}}})" class="list-group-item" ng-class="{active: active('/exercise/{{exer.id}}')}">{{ exer.name }}</a>-->
-                        <a href="/exercise/advanced/text" class="list-group-item" ng-class="{active: active('/exercise/advanced/text')}" ng-hide="true">Pikk tekst</a>
+                        <a href="/exercise/advanced/text" class="list-group-item" ng-class="{active: active('/exercise/advanced/text')}" >Pikk tekst</a>
                         <a href="/exercise/advanced/audio" class="list-group-item" ng-class="{active: active('/exercise/advanced/audio')}">Kuulamine</a>
                     </div>
                 </div>
             </div>
          </div>
-        <div class="panel" ng-hide="true">
+        <div class="panel">
+            <div class="" role="tab" id="headingFour">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseOne" class="list-group-item" href="/exercise/new" ng-class="{active: active('/exercise/new')}">
+                    Loo harjutused
+                </a>
+            </div>
+            <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree" uib-collapse="menu.mine">
+            </div>
+        </div>
+        <div class="panel">
             <div class="" role="tab" id="headingThree">
                 <a role="button" data-toggle="collapse" data-parent="#accordion" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseOne" class="list-group-item">
                     Minu harjutused
@@ -100,8 +109,26 @@
             <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree" uib-collapse="menu.mine">
                 <div class="">
                     <div class="list-group">
-                        <!--<a ng-repeat="exer in exercise" ui-sref="exercise({number: {{exer.id}}})" class="list-group-item" ng-class="{active: active('/exercise/{{exer.id}}')}">{{ exer.name }}</a>-->
-                        <a href="/exercise" class="list-group-item" ng-class="{active: active('')}">Loo </a>
+                        <a class="list-group-item" ng-show="mineExercises.length == 0">Harjutused puuduvad</a>
+                        <a ng-repeat="exer in mineExercises" href="/exercise/shared/{{exer.id}}" class="list-group-item">{{ exer.name }}</a>
+                        <!--<a href="/exercise" class="list-group-item" ng-class="{active: active('')}">Loo </a>-->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel" ng-hide="sharedExerciseMenu">
+            <div class="" role="tab" id="headingFive">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseOne" class="list-group-item">
+                    {{sharedExeMain.name}}
+                </a>
+            </div>
+            <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive" uib-collapse="menu.share">
+                <div class="">
+                    <div class="list-group">
+                        <a ng-repeat="exer in sharedExercises"  href="/exercise/shared/{{exer.exeType}}/{{exer.id}}" class="list-group-item" ng-class="{active: active('/exercise/{{exer.id}}')}">{{ exer.name }}</a>
+                        <!--<a href="/exercise" class="list-group-item" ng-class="{active: active('')}">Loo </a>-->
+
                     </div>
                 </div>
             </div>
@@ -112,10 +139,11 @@
     <ui-view></ui-view>
     </div>
 
+    <script src="/assets/js/jquery-3.1.1.min.js"></script>
+    <script src="/assets/js/jquery-ui.min.js"></script>
     <script src="/assets/js/angular.min.js"></script>
     <script src="/assets/js/angular-ui-router.min.js"></script>
     <script src="/assets/js/ui-bootstrap.min.js"></script>
-    <script src="/assets/js/jquery-3.1.1.min.js"></script>
     <script src="/assets/js/bootstrap.min.js"></script>
     <script src="/assets/js/angular-toggle-switch.min.js"></script>
     <script src="/assets/js/angular-cookies.js"></script>
@@ -123,10 +151,12 @@
     <script src="/assets/js/rzslider.min.js"></script>
     <script src="/assets/js/diff_match_patch.js"></script>
     <script src="/assets/js/angular-diff-match-patch.js"></script>
+    <script src="/assets/js/sortable.js"></script>
     <script src="/app.js"></script>
     <script src="/app/service/keyboard.js"></script>
     <script src="/app/service/user.js"></script>
     <script src="/app/service/audio.js"></script>
+    <script src="/app/service/share.js"></script>
     <script src="/app/controller/maincontroller.js"></script>
 </body>
 </html>

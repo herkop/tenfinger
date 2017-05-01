@@ -1,4 +1,29 @@
-<div ng-controller='ExAudioController'>
+<div>
+    <div class="alert alert-danger alert-dismissable" role="alert" ng-show="exeLoadErrorShow">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Viga!</strong> Sellist harjutust ei leidu!
+    </div>
+</div>
+<div ng-show="exeAudioShow">
+    <div class="modal fade bs-example-modal-sm" id="exeEndModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Harjutus lõppenud</h4>
+                </div>
+                <div class="modal-body">
+                    Valesid: {{ keyboard.wrong }} Aeg: {{ keyboard.time }} Kiirus: {{ keyboard.avgSpeed }} sümbolit minutis<br>
+                    {{ exEndMessage }}
+                    <div diff left-obj="textInserted" right-obj="correctAnswer" options="diffOptions"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" ng-click="repeatExButton()" type="button">Proovi uuesti</button>
+                    <button class="btn btn-warning" ng-click="nextExButton()" type="button"  ng-disabled="nextButtonDisabled">Järgmine</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade bs-example-modal-sm" id="audioTextModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">

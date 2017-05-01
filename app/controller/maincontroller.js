@@ -5,11 +5,22 @@ app.controller('MainController', function($scope) {
 
 });
 
-app.controller('ExerciseController', function($scope, $http, keyboard, $cookies, user) {
+app.controller('ExerciseController', function($scope, $http, keyboard, $cookies, user, share) {
     $scope.exercise = [];
     $http.get('/exec').then(function (response) {
         $scope.exercise = response.data;
     });
+    $scope.mineExercises = [];
+    if(user.getUser() != null) {
+        $http.get("/myexes/" + user.getUserId()).then(function (res) {
+            $scope.mineExercises = res.data;
+        })
+    }
+    if(share.getShareGroup() != null && share.getShareExercises() != null){
+        $scope.sharedExerciseMenu = false;
+        $scope.sharedExeMain = share.getShareGroup();
+        $scope.sharedExercises = share.getShareExercises();
+    }
     $scope.switchLetterStyle = {
       value: true
     };
@@ -83,8 +94,8 @@ app.controller('ExerciseController', function($scope, $http, keyboard, $cookies,
             $scope.keyboard.avgSpeed = Math.floor(typedChar / typedCharSum);
         }
         $scope.result = keyboard.getWord();
-        console.log($event.key);
         if($event.key != 'Shift' && $event.key != 'Alt' && $event.key != 'Control' && $event.key != 'AltGraph') {
+            keyboard.letterTyped($event.key);
             $scope.keyboard.letter_active = keyboard.getActiveLetter();
             $scope.keyboard.key_active = keyboard.getActiveKey();
             $scope.keyboard.letter_style = keyboard.getLetterStyle();
@@ -150,14 +161,19 @@ app.controller('ExerciseController', function($scope, $http, keyboard, $cookies,
     };
 });
 
-app.controller('MenuController', function($scope, $location){
+app.controller('MenuController', function($scope, $location, share){
     $scope.menu = {
         begin: true,
         advanced: true,
-        mine: true
+        mine: true,
+        share: true
     };
+    $scope.sharedExerciseMenu = true;
+    $scope.sharedExeMain = {};
+    $scope.sharedExercises = [];
     $scope.active = function(loc){
         var hrefLocation = $location.path().split("/");
+        $scope.sharedExerciseMenu = true;
         if(hrefLocation[1] == "exercise"){
             if(hrefLocation[2] == "begin"){
                 $scope.menu.begin = false;
@@ -168,12 +184,22 @@ app.controller('MenuController', function($scope, $location){
             else if(hrefLocation[2] == "mine"){
                 $scope.menu.mine = false;
             }
+            else if(hrefLocation[2] == "shared"){
+                $('#collapseThree').removeClass('in');
+                $('#collapseFive').addClass('in');
+                $scope.menu.share = false;
+                if(share.getShareGroup() != null && share.getShareExercises() != null){
+                $scope.sharedExeMain = share.getShareGroup();
+                $scope.sharedExercises = share.getShareExercises();
+                $scope.sharedExerciseMenu = false;
+                }
+            }
         }
         return loc == $location.path();
     };
 });
 
-app.controller('ExController', function($scope, $stateParams, $http, keyboard, $timeout, $state) {
+app.controller('ExController', function($scope, $stateParams, $http, keyboard, $timeout, $state, share) {
     //$cookies.put('user', 'Tester');
     $scope.keyboard = keyboard;
     //var exes = ["jfjffjjfjjjfffjfjfjjfjff", "dkddkkkddkdkdkdkkkdddkd", "slllssllsllsssllsllslslsl", "aöaöaöaöaöööaaöaöaööaöö", "sösdjklalkdfjjllskkdjjfalsddkjfds"];
@@ -204,15 +230,58 @@ app.controller('ExController', function($scope, $stateParams, $http, keyboard, $
           $timeout(timeSpent, 100);
       }
     };
-
+    $scope.nextExNumber = null;
     if(!angular.isUndefined($stateParams.number)) {
         $scope.exNumber = $stateParams.number;
         $scope.nextExNumber = parseInt($stateParams.number) + 1;
+        $scope.exeLoadErrorShow = false;
+        $scope.exeBeginShow = false;
         //$scope.result = exes[$stateParams.number-1];
         $http.get('/currentexec/id/' + $stateParams.number).then(function (response) {
-            $scope.exerName = response.data[0].name;
-            $scope.result = response.data[0].task;
-            keyboard.setWord(response.data[0].task);
+            if(response.data.length > 0) {
+                $scope.exeBeginShow = true;
+                $scope.exerName = response.data[0].name;
+                $scope.result = response.data[0].task;
+                keyboard.setWord(response.data[0].task);
+                $scope.keyboard.letter_active = keyboard.getActiveLetter();
+                $scope.keyboard.key_active = keyboard.getActiveKey();
+                $scope.keyboard.letter_style = keyboard.getLetterStyle();
+                $scope.keyboard.correct = keyboard.getCorrect();
+                $scope.keyboard.wrong = keyboard.getWrong();
+                $scope.keyboard.time = 0;
+                $scope.keyboard.speed = 0;
+                $scope.keyboard.avgSpeed = 0;
+                $timeout(timeSpent, 100);
+            }
+            else{
+                $scope.exeLoadErrorShow = true;
+            }
+        });
+
+        $scope.nextExButton = function () {
+            $('#exeEndModal').modal('hide');
+            $timeout(function() {
+                $state.go('exercise', {'number': $scope.nextExNumber});
+            }, 500);
+        };
+    }
+
+    if(!angular.isUndefined($stateParams.sharenumber)) {
+        $scope.exNumber = $stateParams.sharenumber;
+        //$scope.result = exes[$stateParams.number-1];
+        $scope.sharedExe = share.getShareExe($stateParams.sharenumber);
+        $scope.exeLoadErrorShow = false;
+        $scope.exeBeginShow = false;
+        if($scope.sharedExe == null){
+            $scope.exeLoadErrorShow = true;
+        }
+        else {
+            $scope.exeBeginShow = true;
+            $scope.nextExNumber = share.getSharedNext($scope.sharedExe.ord + 1);
+            $scope.nextButtonDisabled = $scope.nextExNumber == null;
+            $scope.exerName = $scope.sharedExe.name;
+            $scope.result = $scope.sharedExe.exercise;
+            keyboard.setWord($scope.sharedExe.exercise);
             $scope.keyboard.letter_active = keyboard.getActiveLetter();
             $scope.keyboard.key_active = keyboard.getActiveKey();
             $scope.keyboard.letter_style = keyboard.getLetterStyle();
@@ -222,12 +291,26 @@ app.controller('ExController', function($scope, $stateParams, $http, keyboard, $
             $scope.keyboard.speed = 0;
             $scope.keyboard.avgSpeed = 0;
             $timeout(timeSpent, 100);
-        });
 
-        $scope.nextExButton = function(){
-            $('#exeEndModal').modal('hide');
-            $state.go('exercise', {'number':$scope.nextExNumber});
-        };
+            $scope.nextExButton = function () {
+                $('#exeEndModal').modal('hide');
+                $timeout(function () {
+                    if ($scope.nextExNumber != null) {
+                        if ($scope.nextExNumber.type == 1) {
+                            $state.go('exerciseShareBegin', {'sharenumber': $scope.nextExNumber.id});
+                        }
+                        else if ($scope.nextExNumber.type == 2) {
+                            $state.go('exerciseShareText', {'sharenumber': $scope.nextExNumber.id});
+                        }
+                        else if ($scope.nextExNumber.type == 3) {
+                            $state.go('exerciseShareAudio', {'sharenumber': $scope.nextExNumber.id});
+                        }
+                    }
+                }, 500);
+            };
+        }
+    }
+
         $scope.repeatExButton = function () {
             $('#exeEndModal').modal('hide');
             keyboard.setWord(keyboard.getWord());
@@ -242,7 +325,7 @@ app.controller('ExController', function($scope, $stateParams, $http, keyboard, $
             $timeout(timeSpent, 100);
         }
 
-    }
+
 
 });
 
@@ -253,6 +336,10 @@ app.controller('ExeMainController', function($scope, $cookies, $http, user){
     //$scope.user = user.getUser();
     $scope.user = user;
     $scope.user.name = "";
+    $scope.errorName = {
+        show: false,
+        text: ""
+    };
     if(user.getUser() == null){
         $scope.user.name = "külaline";
         $scope.user.isUser = false;
@@ -270,38 +357,135 @@ app.controller('ExeMainController', function($scope, $cookies, $http, user){
         });
     }
     $scope.clickStart = function() {
-        $http.get('/person/add/'+$scope.name).then(function (response) {
-            user.setUser(response.data[0].id, response.data[0].name);
-            $scope.user.isUser = true;
-            user.getUser().then(function (data) {
-                if (data.length == 0) {
-                    $scope.user.name = "külaline";
-                    $scope.user.isUser = false;
-                }
-                else {
-                    $scope.user.name = data[0].name;
+        $http.get('/person/' + $scope.name).then(function (res) {
+            if (res.data.length > 0) {
+                $scope.errorName.text = "Selline kasutaja on juba olemas!";
+                $scope.errorName.show = true;
+            } else {
+                $http.get('/person/add/' + $scope.name).then(function (response) {
+                    $scope.errorName.show = false;
+                    user.setUser(response.data[0].id, response.data[0].name);
                     $scope.user.isUser = true;
-                }
-            });
+                    user.getUser().then(function (data) {
+                        if (data.length == 0) {
+                            $scope.user.name = "külaline";
+                            $scope.user.isUser = false;
+                        }
+                        else {
+                            $scope.user.name = data[0].name;
+                            $scope.user.isUser = true;
+                        }
+                    });
+                });
+            }
         });
-
     }
 });
 
-app.controller('ExTextController', function ($scope, keyboard) {
-    $scope.text = "Oletame, et oled korilane õunte sünnimaal Kasahstanis. Regulaarselt nälga tundes oled õnnelik märgates eemal õunapuude salu. Õnnetuseks märkad, et samas suunas vaatab teisigi tühjusest koriseva kõhuga indiviide. Selles oletuse mängus on sul kasutada omapärane laserrelv, millest tulistades saad muuta pihtasaaja ajutiselt liikumisvõimetuks. Paraku pead arvestama, et konkurentidel on kasutuses samasugune relv sinu tulistamiseks. Mis sa arvad, kas keskendud rohkem õunte kogumisele või püüad pigem teisi õuntest eemal hoida? Võime spekuleerida, kuidas valiks USA värske president, aga kui sa oled nutikas, nõuad otsustamiseks täiendavat informatsiooni. Tõenäoliselt tahad teada, kas õunu on palju või vähe. Kui õunu on vähe, tasub keskenduda konkurentide segamisele. Kui õunu on rohkem, võiksid olla inimlikum, süüa ise kõht täis ja jätta teised rahule.";
-    keyboard.setWord($scope.text);
-    $scope.keyboard.letter_active = keyboard.getActiveLetter();
-    $scope.keyboard.key_active = keyboard.getActiveKey();
-    $scope.keyboard.letter_style = keyboard.getLetterStyle();
-    $scope.keyboard.correct = keyboard.getCorrect();
-    $scope.keyboard.wrong = keyboard.getWrong();
-    $scope.keyboard.time = 0;
-    $scope.keyboard.speed = 0;
-    $scope.keyboard.avgSpeed = 0;
+app.controller('ExTextController', function ($scope, keyboard, $timeout, share, $stateParams, $state) {
+    var endMes = {"excellent": "Väga tubli! Võid järgmise harjutuse juurde asuda.", "good": "Tubli! Tegid ainult mõne üksiku vea.", "bad": "Harjuta veel! Liiga palju vigu oled teinud."};
+
+    var timeSpent = function () {
+        if(keyboard.getStartTime() != 0){
+            if(keyboard.getFinishTime() > 0){
+                $scope.keyboard.time = keyboard.getDiv();
+                if(keyboard.wrong == 0) {
+                    $scope.exEndMessage = endMes["excellent"];
+                }
+                else if(keyboard.wrong <= 6){
+                    $scope.exEndMessage = endMes["good"];
+                }
+                else{
+                    $scope.exEndMessage = endMes["bad"];
+                }
+                $('#exeEndModal').modal('show');
+            }
+            else{
+                var time = (new Date()).getTime();
+                var div = (time - keyboard.getStartTime()) / 1000;
+                $scope.keyboard.time = div;
+            }
+        }
+        if(keyboard.getDiv() == 0) {
+            $timeout(timeSpent, 100);
+        }
+    };
+    if(!angular.isUndefined($stateParams.sharenumber)) {
+        $scope.exNumber = $stateParams.sharenumber;
+        //$scope.result = exes[$stateParams.number-1];
+        $scope.sharedExe = share.getShareExe($stateParams.sharenumber);
+        $scope.exeLoadErrorShow = false;
+        $scope.exeBeginShow = false;
+        if($scope.sharedExe == null){
+            $scope.exeLoadErrorShow = true;
+        }
+        else {
+            $scope.exeBeginShow = true;
+            $scope.nextExNumber = share.getSharedNext($scope.sharedExe.ord + 1);
+            $scope.nextButtonDisabled = $scope.nextExNumber == null;
+            $scope.exeTextName = $scope.sharedExe.name;
+            $scope.text = $scope.sharedExe.exercise;
+            keyboard.setWord($scope.sharedExe.exercise);
+            $scope.keyboard.letter_active = keyboard.getActiveLetter();
+            $scope.keyboard.key_active = keyboard.getActiveKey();
+            $scope.keyboard.letter_style = keyboard.getLetterStyle();
+            $scope.keyboard.correct = keyboard.getCorrect();
+            $scope.keyboard.wrong = keyboard.getWrong();
+            $scope.keyboard.time = 0;
+            $scope.keyboard.speed = 0;
+            $scope.keyboard.avgSpeed = 0;
+            $timeout(timeSpent, 100);
+
+            $scope.nextExButton = function () {
+                $('#exeEndModal').modal('hide');
+                $timeout(function () {
+                    if ($scope.nextExNumber != null) {
+                        if ($scope.nextExNumber.type == 1) {
+                            $state.go('exerciseShareBegin', {'sharenumber': $scope.nextExNumber.id});
+                        }
+                        else if ($scope.nextExNumber.type == 2) {
+                            $state.go('exerciseShareText', {'sharenumber': $scope.nextExNumber.id});
+                        }
+                        else if ($scope.nextExNumber.type == 3) {
+                            $state.go('exerciseShareAudio', {'sharenumber': $scope.nextExNumber.id});
+                        }
+                    }
+                }, 500);
+            };
+        }
+    }
+    else{
+        $scope.text = "Oletame, et oled korilane õunte sünnimaal Kasahstanis. Regulaarselt nälga tundes oled õnnelik märgates eemal õunapuude salu. Õnnetuseks märkad, et samas suunas vaatab teisigi tühjusest koriseva kõhuga indiviide. Selles oletuse mängus on sul kasutada omapärane laserrelv, millest tulistades saad muuta pihtasaaja ajutiselt liikumisvõimetuks. Paraku pead arvestama, et konkurentidel on kasutuses samasugune relv sinu tulistamiseks. Mis sa arvad, kas keskendud rohkem õunte kogumisele või püüad pigem teisi õuntest eemal hoida? Võime spekuleerida, kuidas valiks USA värske president, aga kui sa oled nutikas, nõuad otsustamiseks täiendavat informatsiooni. Tõenäoliselt tahad teada, kas õunu on palju või vähe. Kui õunu on vähe, tasub keskenduda konkurentide segamisele. Kui õunu on rohkem, võiksid olla inimlikum, süüa ise kõht täis ja jätta teised rahule.";
+        $scope.exeTextName = "Pikk tekst";
+        $scope.nextButtonDisabled = false;
+        keyboard.setWord($scope.text);
+        $scope.keyboard.letter_active = keyboard.getActiveLetter();
+        $scope.keyboard.key_active = keyboard.getActiveKey();
+        $scope.keyboard.letter_style = keyboard.getLetterStyle();
+        $scope.keyboard.correct = keyboard.getCorrect();
+        $scope.keyboard.wrong = keyboard.getWrong();
+        $scope.keyboard.time = 0;
+        $scope.keyboard.speed = 0;
+        $scope.keyboard.avgSpeed = 0;
+    }
+
+    $scope.repeatExButton = function () {
+        $('#exeEndModal').modal('hide');
+        keyboard.setWord(keyboard.getWord());
+        $scope.keyboard.letter_active = keyboard.getActiveLetter();
+        $scope.keyboard.key_active = keyboard.getActiveKey();
+        $scope.keyboard.letter_style = keyboard.getLetterStyle();
+        $scope.keyboard.correct = keyboard.getCorrect();
+        $scope.keyboard.wrong = keyboard.getWrong();
+        $scope.keyboard.time = 0;
+        $scope.keyboard.speed = 0;
+        $scope.keyboard.avgSpeed = 0;
+        $timeout(timeSpent, 100);
+    };
+
 });
 
-app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTest, $timeout, $window){
+app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTest, $timeout, $window, $stateParams, share, $state){
      $scope.sliderVolume = {
         value: 0.5,
         options: {
@@ -448,16 +632,19 @@ app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTe
     $scope.repeatDisabled = false;
     $scope.pauseDisabled = false;
     $scope.newAudioTextDisabled = false;
+    $scope.nextButtonDisabled = true;
+    $scope.exeAudioShow = false;
+    $scope.exeLoadErrorShow = false;
     $scope.newAudioModalButton = "Loo harjutus";
         $scope.voice = {
         15: ngAudio.load("/media/test/1704180143420_5986.mp3"),
         14: ngAudio.load("/media/test/1704180143110_3422.mp3")
     };
-    audioTest.loadAudio($scope.exampleAudio);
+    /**audioTest.loadAudio($scope.exampleAudio);
     $timeout(function () {
         $scope.someAudio.duration = audioTest.getDuration();
         $scope.someAudio.remaining = $scope.someAudio.duration;
-    },500);
+    },500);*/
 
 
     var text = "Oletame, et oled korilane õunte sünnimaal Kasahstanis. Regulaarselt nälga tundes oled õnnelik märgates eemal õunapuude salu. Õnnetuseks märkad, et samas suunas vaatab teisigi tühjusest koriseva kõhuga indiviide. Selles oletuse mängus on sul kasutada omapärane laserrelv, millest tulistades saad muuta pihtasaaja ajutiselt liikumisvõimetuks. Paraku pead arvestama, et konkurentidel on kasutuses samasugune relv sinu tulistamiseks. Mis sa arvad, kas keskendud rohkem õunte kogumisele või püüad pigem teisi õuntest eemal hoida? Võime spekuleerida, kuidas valiks USA värske president, aga kui sa oled nutikas, nõuad otsustamiseks täiendavat informatsiooni. Tõenäoliselt tahad teada, kas õunu on palju või vähe. Kui õunu on vähe, tasub keskenduda konkurentide segamisele. Kui õunu on rohkem, võiksid olla inimlikum, süüa ise kõht täis ja jätta teised rahule.";
@@ -568,6 +755,36 @@ app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTe
         }
         return sentences;
     };
+    $scope.nextExNumber = null;
+    if(!angular.isUndefined($stateParams.sharenumber)){
+        var shareText = (share.getShareExe($stateParams.sharenumber));
+        if(shareText == null) {
+            $scope.exeLoadErrorShow = true;
+        }
+        else {
+            $scope.exeAudioShow = true;
+            $scope.nextExNumber = share.getSharedNext(shareText.ord + 1);
+            $scope.nextButtonDisabled = $scope.nextExNumber == null;
+            text = shareText.exercise;
+            audioTest.getAudioFiles(textToSentencesL(shareText.exercise)).then(function (data) {
+                audioTest.loadAudioL(data);
+                $timeout(function () {
+                    $scope.someAudio.duration = audioTest.getDuration();
+                    $scope.someAudio.remaining = $scope.someAudio.duration;
+                }, 500);
+            });
+        }
+    }
+    else {
+        $scope.exeAudioShow = true;
+        $scope.nextButtonDisabled = true;
+        audioTest.loadAudio($scope.exampleAudio);
+        $timeout(function () {
+            $scope.someAudio.duration = audioTest.getDuration();
+            $scope.someAudio.remaining = $scope.someAudio.duration;
+        },500);
+    }
+
     var isValueBetween = function (value, min ,max) {
         return value >= min && value <= max;
     };
@@ -609,10 +826,45 @@ app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTe
             $scope.repeatDisabled = false;
             $scope.pauseDisabled = false;
             $scope.textDisabled = true;
-            $scope.textVisibility = false;
+            //$scope.textVisibility = false;
             $scope.correctAnswer = text;
-            textCheck($scope.textInserted);
+            $scope.someAudio.location = 0;
+            $scope.someAudio.currentTime = 0;
+            //textCheck($scope.textInserted);
+            $('#exeEndModal').modal('show');
         }
+    };
+
+    $scope.nextExButton = function () {
+        $('#exeEndModal').modal('hide');
+        $timeout(function () {
+            if ($scope.nextExNumber != null) {
+                if ($scope.nextExNumber.type == 1) {
+                    $state.go('exerciseShareBegin', {'sharenumber': $scope.nextExNumber.id});
+                }
+                else if ($scope.nextExNumber.type == 2) {
+                    $state.go('exerciseShareText', {'sharenumber': $scope.nextExNumber.id});
+                }
+                else if ($scope.nextExNumber.type == 3) {
+                    $state.go('exerciseShareAudio', {'sharenumber': $scope.nextExNumber.id});
+                }
+            }
+        }, 500);
+    };
+
+    $scope.repeatExButton = function () {
+        $scope.textareaFocus = true;
+        $scope.sliderVolume.options.disabled = false;
+        $scope.sliderPlayback.options.disabled = false;
+        $scope.repeatDisabled = false;
+        $scope.pauseDisabled = false;
+        $scope.someAudio.location = 0;
+        $scope.someAudio.currentTime = 0;
+        //$scope.textDisabled = false;
+        $scope.correctAnswer = "";
+        $scope.textInserted = "";
+        $scope.sliderProgress.value = 0;
+        $('#exeEndModal').modal('hide');
     };
 
     $scope.toggleCorrect = function () {
@@ -750,6 +1002,144 @@ app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTe
         return {result: res, letter: {wrong: letterWrong, correct: letterCorrect}};
     };
 
+});
+
+app.controller('NewExeController', function ($scope, $http, user, $filter) {
+    $scope.newExeGroupName = "";
+    $scope.newExercise = [{id: 1, name: "", value: "", type: {name: "", id: 0}, isNew: false}];
+    $scope.newExe = 3;
+    $scope.selectedExerciseType = {};
+    $scope.exerciseTypes = [{name: "Täht haaval", id: 1}, {name: "Pikem tekst", id: 2}, {name:"Kuulamine", id: 3}];
+    $scope.sortableOptions = {
+        handle: '.sorting-drag',
+        placeholder: "placeholder",
+        connectWith: ".sorting-list"
+    };
+    $scope.exerciseExpiresTimes = [{name: "1 tund", value: "1 hour"}, {name: "2 tundi", value: "2 hour"}, {name: "8 tundi", value: "8 hour"}, {name: "1 päev", value: "1 day"}, {name: "2 päeva", value: "2 day"}, {name: "3 päeva", value: "3 day"}, {name: "4 päeva", value: "4 day"}, {name: "5 päeva", value: "5 day"}];
+    $scope.selectedExpiresTime = {};
+    $scope.newExeError = false;
+    $scope.newExeSuccess = false;
+    $scope.addNewExe = function () {
+        $scope.newExe += 1;
+        $scope.newExercise.push({id: $scope.newExe, name: "", value: "", type: {name: "", id: 0}, isNew: true});
+
+    };
+    $scope.delete = function (item) {
+        var id = $scope.newExercise.indexOf(item);
+        $scope.newExercise.splice(id, 1);
+    };
+
+    $scope.elemFocus = function (elem) {
+        var elemLen = $scope.newExercise.length;
+        for(var i = 0; i < elemLen; i++) {
+            if(i == elem){
+                $("#colap" + elem).collapse("show");
+            }
+            else {
+                $("#colap" + i).collapse("hide");
+            }
+
+        }
+    };
+    $scope.elemClick = function (elem) {
+        var elemLen = $scope.newExercise.length;
+        for(var i = 0; i < elemLen; i++) {
+            if(i == elem){
+                $("#colap" + elem).collapse("toggle");
+            }
+            else {
+                $("#colap" + i).collapse("hide");
+            }
+
+        }
+    };
+
+    $scope.createNewExes = function () {
+
+        var currentTime = new Date();
+        currentTime.setDate(currentTime.getDate() + 2);
+        //console.log( $filter('date')(currentTime, 'yyyy-MM-dd HH:mm'));
+
+
+        $('#newExeButton').button('loading');
+
+        if($scope.newExeGroupName.length == 0 || angular.isUndefined($scope.selectedExpiresTime.value)){
+            $scope.newExeError = true;
+            $scope.newExeSuccess = false;
+            $('#newExeButton').button('reset');
+        }
+        else{
+            var correct = true;
+            for(var j = 0; j < $scope.newExercise.length; j++){
+                if($scope.newExercise[j].name.length == 0 || $scope.newExercise[j].value.length == 0
+                    || $scope.newExercise[j].type.name.length == 0 || $scope.newExercise[j].type.id == 0){
+                    $scope.newExeError = true;
+                    $scope.newExeSuccess = false;
+                    $('#newExeButton').button('reset');
+                    correct = false;
+                    break;
+                }
+            }
+            if(correct){
+                $scope.newExeError = false;
+                var userId = user.getUserId();
+                if(angular.isUndefined(userId)){
+                    userId = null;
+                }
+                $http.get("/newgroup/" + $scope.newExeGroupName + "/" + userId + "/" + $scope.selectedExpiresTime.value).then(function (res) {
+
+                    if(!angular.isUndefined(res.data[0].id)){
+                        for(var i = 0; i < $scope.newExercise.length; i++) {
+                            $http.get("/newexe/" + $scope.newExercise[i].name + "/" + $scope.newExercise[i].type.id +
+                                "/" + $scope.newExercise[i].value + "/" + i + "/" + res.data[0].id + "/" + $scope.selectedExpiresTime.value).then(function (response) {
+                                    $scope.newExeSuccess = true;
+                                    $('#newExeButton').button('reset');
+                            });
+                        }
+                    }
+
+                });
+
+            }
+        }
+
+    };
+});
+
+app.controller('SharedExeController', function ($scope, $http, $stateParams, share) {
+    $scope.sharedExeMain = [];
+    $scope.sharedExercises = [];
+    $scope.sharedDate = "";
+    $scope.sharedExeType = "";
+    $scope.sharedExeGroupErrorShow = false;
+    $scope.sharedExeGroupShow = false;
+    $http.get("/sharedgroup/" + $stateParams.exercise).then(function (res) {
+        if(res.data.length > 0){
+            $scope.sharedExeGroupShow = true;
+        $scope.sharedExeMain = res.data[0];
+        $scope.sharedDate = new Date($scope.sharedExeMain.expires);
+        share.setShareGroup(res.data[0]);
+
+            $http.get("/sharedexes/" + $stateParams.exercise).then(function (response) {
+                $scope.sharedExercises = response.data;
+                share.setShareExercises(response.data);
+                if(response.data[0].type == 1){$scope.sharedExeType = "begin";}
+                else if(response.data[0].type == 2){$scope.sharedExeType = "text";}
+                else if(response.data[0].type == 3){$scope.sharedExeType = "audio";}
+            });
+        }
+        else{
+            $scope.sharedExeGroupErrorShow = true;
+        }
+    });
+});
+
+app.directive('focus', function () {
+    return function (scope, element, attrs) {
+        attrs.$observe('focus', function (newValue) {
+            newValue === 'true' && element[0].focus();
+        });
+    }
 });
 
 app.filter("audioTrackTime", function () {

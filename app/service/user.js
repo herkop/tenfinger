@@ -10,7 +10,12 @@ app.service('user', function ($cookies, $http) {
        }else {
            return $http.get('/person/id/' + id).then(function (res) {
 
+               if(res.data[0].length == 0){
+                   return null;
+               }
                return res.data;
+           }, function (error) {
+               return null;
            });
        }
    };
@@ -35,7 +40,7 @@ app.service('user', function ($cookies, $http) {
    };
 
    this.getUserId = function () {
-       this.reNewUser();
+       //this.reNewUser();
        return id;
    }
 });

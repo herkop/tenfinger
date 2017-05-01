@@ -17,11 +17,17 @@ app.get('/exercise/*', function(req, res) {
 
 app.get('/test', db.getTest);
 app.get('/person/id/:id', db.getPerson);
+app.get('/person/:name', db.isPerson);
 app.get('/person/add/:name', db.setPerson);
 app.get('/exec', db.getExercise);
 app.get('/currentexec/id/:id', db.getCurrentExercise);
 app.get('/setting/:person', db.getSettings);
 app.get('/updateset/:person/:setting/:value', db.updateSettings);
+app.get('/newgroup/:name/:owner/:expires', db.addNewExeGroup);
+app.get('/newexe/:name/:type/:exercise/:order/:group/:expires', db.addNewExercise);
+app.get('/myexes/:owner', db.getMyExeGroup);
+app.get('/sharedgroup/:id', db.getSharedExeGroup);
+app.get('/sharedexes/:id', db.getSharedExes);
 
 
 app.listen(process.env.PORT || 3100, function(){

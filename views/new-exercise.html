@@ -1,0 +1,49 @@
+<h2>Loo uued harjutused</h2>
+
+<div>
+    <form>
+        <div class="alert alert-danger alert-dismissable" role="alert" ng-show="newExeError">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Viga!</strong> Kõik väljad peavad olema täidetud!
+        </div>
+        <div class="alert alert-success alert-dismissible alert-margin" role="alert" ng-show="newExeSuccess">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Õnnestus!</strong> Harjutuste loomine õnnestus!
+        </div>
+        <div class="form-group">
+            <label for="exerName">Harjutuste grupi nimi</label>
+            <input type="text" id="exerName" ng-model="newExeGroupName" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="selExpires">Kui pikalt harjutusi alles hoida</label>
+            <select id="selExpires" class="form-control sorting-type" ng-model="selectedExpiresTime" ng-options="time.name for time in exerciseExpiresTimes">
+                <option value="" selected disabled>Vali tüüp</option>
+            </select>
+        </div>
+    <ul class="sorting-list" ui-sortable="sortableOptions" ng-model="newExercise" id="sortList">
+        <li class="sorting-elem" ng-repeat="exe in newExercise track by $index" ng-click="elemFocus($index)">
+            <div class="form-inline">
+            <div class="sorting-drag">:::</div>
+            <input class="form-control sorting-input" type="text" ng-model="exe.name" size="24" focus="{{exe.isNew}}" placeholder="Harjutuse nimi" ng-focus="elemFocus($index)">
+            <select class="form-control sorting-type" ng-model="exe.type" ng-focus="elemFocus($index)" ng-options="type.name for type in exerciseTypes">
+            <option value="" selected disabled>Vali tüüp</option>
+            </select>
+            <a class="sorting-remove" ng-click="delete(exe)"><span class="glyphicon glyphicon-remove"></span></a>
+            <div class="collapse" id="colap{{$index}}" data-parent="#sortList">
+                <textarea class="form-control sorting-text" ng-model="exe.value" ng-focus="elemFocus($index)" cols="50" rows="5" placeholder="Harjutuse tekst"></textarea>
+            </div>
+
+            </div>
+        </li>
+        <li class="sorting-elem sorting-new">
+            <div class="form-inline">
+                <div class="sorting-add"><span class="glyphicon glyphicon-plus" ng-click="addNewExe()"></span></div>
+                <input class="form-control sorting-input" type="text" size="24" ng-focus="addNewExe()" placeholder="Harjutuse nimi">
+            </div>
+        </li>
+    </ul>
+        <div class="form-group">
+            <button class="btn btn-primary" id="newExeButton" ng-click="createNewExes()" data-loading-text="<i class='fa fa-spinner fa-pulse'></i> Loon harjutusi">Loo harjutused</button>
+        </div>
+    </form>
+</div>
