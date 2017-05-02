@@ -1,8 +1,7 @@
 var pg = require('pg');
 
 pg.defaults.ssl = true;
-//var db = new pg.Client(process.env.DATABASE_URL);
-var db = new pg.Client("postgres://zsrraiosvzbxkn:bea1fe1a923f98013bf54c163476af86540148e68a4f130644e5bdc6ee94890c@ec2-54-75-248-193.eu-west-1.compute.amazonaws.com:5432/d3v76ivvco6t7t");
+var db = new pg.Client(process.env.DATABASE_URL);
 db.connect();
 
 exports.getTest = function (req, res) {
