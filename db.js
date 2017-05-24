@@ -124,7 +124,6 @@ exports.addNewExercise = function (req, res) {
     var expires = timeExpire(req.body.expires);
     var exer = req.body.exercise;
     db.query("INSERT INTO shared_exercise (name, exercise, type, exercise_group, ord, expires) VALUES ($1, $2, $3, $4, $5, (current_timestamp + $6 * (interval " + expires[1] + ")));", [req.body.name, req.body.exercise, req.body.type, req.body.group, req.body.order, expires[0]]).then(function (data) {
-        console.log("SIIN");
         res.json(data.rows);
     },
     function (error) {

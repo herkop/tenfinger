@@ -799,6 +799,8 @@ app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTe
         }
         return sentences;
     };
+
+
     $scope.nextExNumber = null;
     if(!angular.isUndefined($stateParams.sharenumber)){
         share.getExercises($stateParams.exercise).then(function(res) {
@@ -818,9 +820,25 @@ app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTe
                 audioTest.getAudioFiles(textToSentencesL(shareText.exercise)).then(function (data) {
                     audioTest.loadAudioL(data);
                     $timeout(function () {
-                        $scope.someAudio.duration = audioTest.getDuration();
-                        $scope.someAudio.remaining = $scope.someAudio.duration;
-                    }, 500);
+                        var duration = audioTest.getDuration();
+                        if(isNaN(duration)){
+                            $timeout(function () {
+                                var duration = audioTest.getDuration();
+                                if(isNaN(duration)){
+                                    $scope.someAudio.duration = 0;
+                                    $scope.someAudio.remaining = 0;
+                                }
+                                else {
+                                    $scope.someAudio.duration = duration;
+                                    $scope.someAudio.remaining = duration;
+                                }
+                            }, 500);
+                        }
+                        else {
+                            $scope.someAudio.duration = duration;
+                            $scope.someAudio.remaining = duration;
+                        }
+                    },500);
                 });
             }
         }, function (error) {
@@ -832,9 +850,26 @@ app.controller('ExAudioController', function($scope, $http, ngAudio, $q, audioTe
         $scope.nextButtonDisabled = true;
         $scope.exeAudioName = "Kuulamise harjutus";
         audioTest.loadAudio($scope.exampleAudio);
+
         $timeout(function () {
-            $scope.someAudio.duration = audioTest.getDuration();
-            $scope.someAudio.remaining = $scope.someAudio.duration;
+            var duration = audioTest.getDuration();
+            if(isNaN(duration)){
+                $timeout(function () {
+                    var duration = audioTest.getDuration();
+                    if(isNaN(duration)){
+                        $scope.someAudio.duration = 0;
+                        $scope.someAudio.remaining = 0;
+                    }
+                    else {
+                        $scope.someAudio.duration = duration;
+                        $scope.someAudio.remaining = duration;
+                    }
+                }, 500);
+            }
+            else {
+                $scope.someAudio.duration = duration;
+                $scope.someAudio.remaining = duration;
+            }
         },500);
     }
 
