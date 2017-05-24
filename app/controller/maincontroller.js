@@ -111,7 +111,7 @@ app.controller('ExerciseController', function($scope, $http, keyboard, $cookies,
             $scope.keyboard.letter_active = keyboard.getActiveLetter();
             $scope.keyboard.key_active = keyboard.getActiveKey();
             $scope.keyboard.letter_style = keyboard.getLetterStyle();
-            $scope.key_wrong = keyboard.getWrongKey();
+            $scope.keyboard.key_wrong = keyboard.getWrongKey();
             $scope.keyboard.correct = keyboard.getCorrect();
             $scope.keyboard.wrong = keyboard.getWrong();
         }
@@ -147,12 +147,12 @@ app.controller('ExerciseController', function($scope, $http, keyboard, $cookies,
        if($scope.switchKeyboardInst.value){
            keyboard.setKeyboardHint(true);
            $scope.keyboard.key_active = keyboard.getActiveKey();
-           $scope.key_wrong = keyboard.getWrongKey();
+           $scope.keyboard.key_wrong = keyboard.getWrongKey();
        }
        else{
            keyboard.setKeyboardHint(false);
            $scope.keyboard.key_active = null;
-           $scope.key_wrong = null;
+           $scope.keyboard.key_wrong = null;
        }
        if(pageLoaded) {
            updateSettingChange(3, $scope.switchKeyboardInst.value);
@@ -275,6 +275,7 @@ app.controller('ExController', function($scope, $stateParams, $http, keyboard, $
                 $scope.keyboard.time = 0;
                 $scope.keyboard.speed = 0;
                 $scope.keyboard.avgSpeed = 0;
+                $scope.keyboard.key_wrong = null;
                 $timeout(timeSpent, 100);
             }
             else{
@@ -318,6 +319,7 @@ app.controller('ExController', function($scope, $stateParams, $http, keyboard, $
                 $scope.keyboard.time = 0;
                 $scope.keyboard.speed = 0;
                 $scope.keyboard.avgSpeed = 0;
+                $scope.keyboard.key_wrong = null;
                 $timeout(timeSpent, 100);
 
                 $scope.nextExButton = function () {
