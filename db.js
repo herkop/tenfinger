@@ -120,11 +120,15 @@ exports.addNewExeGroup = function (req, res) {
 };
 
 exports.addNewExercise = function (req, res) {
-    var expires = timeExpire(req.params.expires);
-    db.query("INSERT INTO shared_exercise (name, exercise, type, exercise_group, ord, expires) VALUES ($1, $2, $3, $4, $5, (current_timestamp + $6 * (interval " + expires[1] + ")));", [req.params.name, req.params.exercise, req.params.type, req.params.group, req.params.order, expires[0]]).then(function (data) {
+    console.log(req.body);
+    var expires = timeExpire(req.body.expires);
+    var exer = req.body.exercise;
+    db.query("INSERT INTO shared_exercise (name, exercise, type, exercise_group, ord, expires) VALUES ($1, $2, $3, $4, $5, (current_timestamp + $6 * (interval " + expires[1] + ")));", [req.body.name, req.body.exercise, req.body.type, req.body.group, req.body.order, expires[0]]).then(function (data) {
+        console.log("SIIN");
         res.json(data.rows);
     },
     function (error) {
+        console.log(error);
         res.json([]);
     })
 };
@@ -149,7 +153,6 @@ exports.getMyExeGroup = function (req, res) {
 };
 
 exports.getSharedExeGroup = function (req, res) {
-    /** PEAB OLEMA expires > now()*/
     db.query("SELECT id, name, expires from shared_exercise_group where id = $1 and expires > now();", [req.params.id]).then(function (data) {
         res.json(data.rows);
     },
@@ -159,7 +162,6 @@ exports.getSharedExeGroup = function (req, res) {
 };
 
 exports.getSharedExes = function (req, res) {
-    /** PEAB OLEMA expires > now()*/
     db.query("SELECT id, name, expires, exercise, type, ord from shared_exercise where exercise_group = $1 and expires > now() ORDER BY ord;", [req.params.id]).then(function (data) {
         res.json(data.rows);
     },

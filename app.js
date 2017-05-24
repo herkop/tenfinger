@@ -40,19 +40,19 @@ app.config(function($stateProvider, $locationProvider, $qProvider) {
             resolve: {}
         })
         .state('exerciseShareBegin', {
-            url: '/exercise/shared/begin/:sharenumber',
+            url: '/exercise/shared/:exercise/begin/:sharenumber',
             templateUrl: '/views/exe.html',
             controller: 'ExController',
             resolve: {}
         })
         .state('exerciseShareText', {
-            url: '/exercise/shared/text/:sharenumber',
+            url: '/exercise/shared/:exercise/text/:sharenumber',
             templateUrl: '/views/exe-text.html',
             controller: 'ExTextController',
             resolve: {}
         })
         .state('exerciseShareAudio', {
-            url: '/exercise/shared/audio/:sharenumber',
+            url: '/exercise/shared/:exercise/audio/:sharenumber',
             templateUrl: '/views/exe-audio.html',
             controller: 'ExAudioController',
             resolve: {}

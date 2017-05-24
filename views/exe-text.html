@@ -1,6 +1,5 @@
 <div>
     <div class="alert alert-danger alert-dismissable" role="alert" ng-show="exeLoadErrorShow">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <strong>Viga!</strong> Sellist harjutust ei leidu!
     </div>
 </div>
@@ -26,6 +25,6 @@
     <h2>{{exeTextName}}</h2>
     <div class="stat_info">Õigeid: {{ keyboard.correct }}  Valesid: {{ keyboard.wrong }}  Aeg: {{ keyboard.time }} Kiirus: {{ keyboard.avgSpeed }} sümbolit minutis</div>
     <div class="exeText">
-        <span ng-repeat="lett in text track by $index" class="text-letter" ng-class="{letter_active: keyboard.letter_active == lett+$index, letter_green: keyboard.letter_style[$index], letter_red: (!keyboard.letter_style[$index] && keyboard.letter_style[$index] != undefined)}">{{ lett }}</span>
+        <span ng-repeat="lett in text track by $index"><span class="text-letter" ng-class="{letter_active: keyboard.letter_active == lett+$index, letter_green: keyboard.letter_style[$index], letter_red: (!keyboard.letter_style[$index] && keyboard.letter_style[$index] != undefined)}"><i class="fa fa-level-down enter-icon" aria-hidden="true" ng-show="lett == '\n'"></i>{{ lett }}</span><br ng-show="lett == '\n'"></span>
     </div>
 </div>

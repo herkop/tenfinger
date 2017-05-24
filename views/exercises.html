@@ -39,7 +39,7 @@
                                     <label for="keyboardShow">Klaviatuuri kuvamine</label>
                                     <toggle-switch class="loc-right" ng-model="switchKeyboard.value" id="keyboardShow"></toggle-switch>
                                 </div>
-                                <div class="form-inline form-group">
+                                <div class="form-inline form-group" ng-hide="true">
                                     <label for="keyboardLayout">Klaviatuur</label>
                                     <select id="keyboardLayout" class="form-control loc-right" ng-model="selectKeyboardLayout.value" ng-disabled="selectKeyboardLayout.disable">
                                         <option value="eesti">Eesti</option>
@@ -110,7 +110,7 @@
                 <div class="">
                     <div class="list-group">
                         <a class="list-group-item" ng-show="mineExercises.length == 0">Harjutused puuduvad</a>
-                        <a ng-repeat="exer in mineExercises" href="/exercise/shared/{{exer.id}}" class="list-group-item">{{ exer.name }}</a>
+                        <a ng-repeat="exer in mineExercises" href="/exercise/shared/{{exer.id}}" ng-click="changeCollapse()" ng-hide="isExpired(mineExercises.expires)" class="list-group-item">{{ exer.name }}</a>
                         <!--<a href="/exercise" class="list-group-item" ng-class="{active: active('')}">Loo </a>-->
 
                     </div>
@@ -119,14 +119,14 @@
         </div>
         <div class="panel" ng-hide="sharedExerciseMenu">
             <div class="" role="tab" id="headingFive">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseOne" class="list-group-item">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseOne" class="list-group-item" href="/exercise/shared/{{sharedExeMain.id}}" ng-class="{active: active('/exercise/shared/{{sharedExeMain.id}}')}">
                     {{sharedExeMain.name}}
                 </a>
             </div>
             <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive" uib-collapse="menu.share">
                 <div class="">
                     <div class="list-group">
-                        <a ng-repeat="exer in sharedExercises"  href="/exercise/shared/{{exer.exeType}}/{{exer.id}}" class="list-group-item" ng-class="{active: active('/exercise/{{exer.id}}')}">{{ exer.name }}</a>
+                        <a ng-repeat="exer in sharedExercises"  href="/exercise/shared/{{sharedExeMain.id}}/{{exer.exeType}}/{{exer.id}}" class="list-group-item" ng-class="{active: active('/exercise/shared/{{sharedExeMain.id}}/{{exer.exeType}}/{{exer.id}}')}">{{ exer.name }}</a>
                         <!--<a href="/exercise" class="list-group-item" ng-class="{active: active('')}">Loo </a>-->
 
                     </div>

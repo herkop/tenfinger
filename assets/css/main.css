@@ -7,7 +7,6 @@
     float:left;
     width: 17%;
     height: 100%;
-    margin-top: 3%;
 }
 
 .content{
@@ -153,8 +152,10 @@
 }
 
 .letter_active{
-    border: solid black 1px;
+    border: solid blue 1px;
     border-radius: 5px;
+    background-color: #F0EFFF;
+    padding: 2px;
 }
 
 .keyboard{
@@ -298,6 +299,12 @@
     background-color: #d43f3a;
 }
 
+.share-url{
+    width: 240px;
+    float: right;
+    margin-top: -7px;
+}
+
 ul.sorting-list{
     list-style-type: none;
     margin: 0;
@@ -365,3 +372,37 @@ ul.sorting-list{
     -moz-border-radius: 5px;
     border-radius: 5px;
 }
+
+.enter-icon{
+    -webkit-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    transform: rotate(90deg);
+    margin-left: 2px;
+}
+
+/**Käed*/
+/**
+.left-hand{
+    background: url("/media/hands/left-1.svg");
+    background-size: 100px 100px;
+    background-repeat: no-repeat;
+    height: 100px;
+
+}
+
+.left_hand_1{
+    background: url("/media/hands/left-1.svg");
+    background-size: 100px 100px;
+    background-repeat: no-repeat;
+    height: 100px;
+}
+
+.left_hand_2{
+    background: url("/media/hands/left-2.svg");
+    background-size: 100px 100px;
+    background-repeat: no-repeat;
+    height: 100px;
+}
+*/

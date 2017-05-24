@@ -16,10 +16,18 @@ app.service('keyboard', function(){
     var wrong_type = null;
     var letterHint = true;
     var letter_style_saved = [];
+    var w_type = true;
     this.getWord = function(){
         return word;
     };
-    this.setWord = function(value){
+    this.setWord = function(value, type){
+        if(angular.isUndefined(type)){
+            w_type = true;
+        }
+        else{
+            w_type = type;
+        }
+
         word = value;
         step = 0;
         if(keyHint) {
@@ -103,19 +111,35 @@ app.service('keyboard', function(){
             }
             else {
                 //wrong - red color
-                if (letterHint) {
-                    letter_style[step] = false;
-                    letter_style_saved[step] = false;
-                }
-                if (keyHint) {
-                    wrong_key = letter;
-                }
-                wrong_type = letter;
-                if (!same_char && word.length > correct + wrong) {
-                    wrong += 1;
-                    same_char = true;
+                if(step > 0 && step < word.length) {
+                    if (letterHint) {
+                        letter_style[step] = false;
+                        letter_style_saved[step] = false;
+                    }
+                    if (keyHint) {
+                        wrong_key = letter;
+                    }
+                    if (w_type) {
+                        wrong_type = letter;
+                        if (!same_char && word.length > correct + wrong) {
+                            wrong += 1;
+                            same_char = true;
+                        }
+                    }
+                    else {
+                        if (step == word.length - 1) {
+                            finish_time = (new Date()).getTime();
+                            div = (finish_time - start_time) / 1000;
+                        }
+                        step += 1;
+                        active_letter = word[step] + step;
+                        wrong_type = null;
+                        wrong += 1;
+                        same_char = true;
+                    }
                 }
             }
+
         }
     };
 
