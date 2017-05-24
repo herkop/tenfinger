@@ -128,7 +128,6 @@ exports.addNewExercise = function (req, res) {
         res.json(data.rows);
     },
     function (error) {
-        console.log(error);
         res.json([]);
     })
 };
